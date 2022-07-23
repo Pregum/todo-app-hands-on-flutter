@@ -1,3 +1,5 @@
+import 'package:uuid/uuid.dart';
+
 import 'observer.dart';
 import 'todo.dart';
 
@@ -21,8 +23,37 @@ class TodoManager {
     _listeners.clear();
   }
 
+  void updateEditEnabled() {
+    for (var todo in _todos) {
+      todo.isEditEnabled = false;
+    }
+
+    _notifyListeners(_todos);
+  }
+
+  void deleteTodo(int index) {
+    if (index < 0 || _todos.length <= index) {
+      return;
+    }
+    _todos.removeAt(index);
+    _notifyListeners(_todos);
+  }
+
+  bool _verifyUniqueId(String id) {
+    return _todos.any((todo) => todo.id == id);
+  }
+
   void createNewTodo() {
-    final newTodo = Todo(isCompleted: false, taskName: 'new todo');
+    const uuid = Uuid();
+    var newId = uuid.v4();
+    while (_verifyUniqueId(newId)) {
+      newId = uuid.v4();
+    }
+    final newTodo = Todo(
+        isCompleted: false,
+        taskName: 'new todo',
+        isEditEnabled: true,
+        id: newId);
     _todos.add(newTodo);
     _notifyListeners(_todos);
   }

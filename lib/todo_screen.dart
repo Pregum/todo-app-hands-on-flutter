@@ -22,6 +22,12 @@ class _TodoScreenState extends State<TodoScreen>
   }
 
   @override
+  void dispose() {
+    TodoManager.getInstance().clearListenrs();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       builder: (BuildContext context, AsyncSnapshot<List<Todo>> snapshot) {
@@ -39,22 +45,69 @@ class _TodoScreenState extends State<TodoScreen>
     if (contents == null || contents.isEmpty) {
       return const Center(child: Text('タスクを追加しましょう！'));
     } else {
-      return ListView.builder(
-          itemBuilder: (context, index) {
-            final currentContent = contents[index];
-            return CheckboxListTile(
-              value: currentContent.isCompleted,
-              onChanged: (bool? value) {
-                if (value == null) {
-                  return;
-                }
+      return GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+          TodoManager.getInstance().updateEditEnabled();
+        },
+        child: ListView.builder(
+            itemBuilder: (context, index) {
+              final currentContent = contents[index];
+              return Dismissible(
+                key: Key(currentContent.id),
+                onDismissed: (direction) {
+                  TodoManager.getInstance().deleteTodo(index);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${currentContent.taskName}は削除されました。'),
+                    ),
+                  );
+                },
+                background: Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(left: 8.0),
+                  color: Colors.red[500],
+                  child: const Icon(
+                    Icons.delete,
+                    color: Colors.black,
+                  ),
+                ),
+                child: Material(
+                  child: InkWell(
+                    onLongPress: !currentContent.isCompleted
+                        ? () {
+                            setState(() => currentContent.isEditEnabled = true);
+                          }
+                        : null,
+                    child: CheckboxListTile(
+                      value: currentContent.isCompleted,
+                      onChanged: (bool? value) {
+                        if (value == null) {
+                          return;
+                        }
 
-                setState(() => currentContent.isCompleted = value);
-              },
-              title: Text(currentContent.taskName),
-            );
-          },
-          itemCount: contents.length);
+                        setState(() => currentContent.isCompleted = value);
+                      },
+                      title: currentContent.isEditEnabled
+                          ? TextField(
+                              onChanged: (value) => setState(
+                                  () => currentContent.taskName = value),
+                            )
+                          : Text(currentContent.taskName,
+                              style: currentContent.isCompleted
+                                  ? const TextStyle(
+                                      decoration: TextDecoration.lineThrough,
+                                      decorationStyle:
+                                          TextDecorationStyle.double,
+                                    )
+                                  : null),
+                    ),
+                  ),
+                ),
+              );
+            },
+            itemCount: contents.length),
+      );
     }
   }
 

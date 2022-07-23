@@ -1,5 +1,11 @@
 class Todo {
+  String id;
   String taskName;
   bool isCompleted;
-  Todo({required this.taskName, required this.isCompleted});
+  bool isEditEnabled;
+  Todo(
+      {required this.id,
+      required this.taskName,
+      required this.isCompleted,
+      required this.isEditEnabled});
 }
