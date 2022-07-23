@@ -1,9 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:todo_app/todo.dart';
 import 'package:todo_app/todo_manager.dart';
 
 import 'todo_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Hiveのデータ取得するまでは読み込み画面を出す。.
+  // ref: https://github.com/rrousselGit/riverpod/issues/329#issuecomment-879099371
+  // Show a progress indicator while awaiting things
+  runApp(
+    const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: CircularProgressIndicator.adaptive(),
+        ),
+      ),
+    ),
+  );
+
+  await Hive.initFlutter();
+  Hive.registerAdapter(TodoAdapter());
+
   runApp(const MyApp());
 }
 
