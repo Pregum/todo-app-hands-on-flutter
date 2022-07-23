@@ -58,6 +58,15 @@ class TodoManager {
     _notifyListeners(_todos);
   }
 
+  void insertTodo(int index, Todo todo) {
+    if (index < 0 || _todos.length <= index) {
+      return;
+    }
+
+    _todos.insert(index, todo);
+    _notifyListeners(_todos);
+  }
+
   void _notifyListeners(List<Todo> items) {
     for (var listener in _listeners) {
       listener.onReceive(items);

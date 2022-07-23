@@ -59,7 +59,24 @@ class _TodoScreenState extends State<TodoScreen>
                   TodoManager.getInstance().deleteTodo(index);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('${currentContent.taskName}は削除されました。'),
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text('${currentContent.taskName}は削除されました。'),
+                        ],
+                      ),
+                      action: SnackBarAction(
+                        label: '元へ戻す',
+                        onPressed: () {
+                          TodoManager.getInstance()
+                              .insertTodo(index, currentContent);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('元へ戻しました'),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   );
                 },
