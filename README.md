@@ -1,16 +1,39 @@
 # todo_app
 
-A new Flutter project.
+ハンズオン用に作成したTodo アプリです。
 
-## Getting Started
+機能一覧
 
-This project is a starting point for a Flutter application.
+* タスク作成機能
+* タスク編集機能
+* タスク削除機能
+* タスクDB保存機能
+* タスク完了チェック機能
 
-A few resources to get you started if this is your first Flutter project:
+## 起動方法
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+### Android
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+#### コマンドラインの場合
+
+1. `flutter pub get`コマンドを実行
+
+2. `flutter run` コマンドを実行し、デバイスの指定画面が表示されるので、androidの実機もしくはエミュレータを選択する
+
+#### vscodeの場合
+
+1. Shift + cmd + d (WindowsはShift + Ctrl + d) で起動する環境リストを「todo_app」を選択し、`main.dart` ファイルを起動している状態でF5で起動
+
+### Chrome
+
+#### コマンドラインの場合
+
+1. `flutter pub get` コマンドを実行
+
+2. `flutter run` コマンドを実行し、起動可能なデバイス一覧からChromeを選択する。
+
+#### vscodeの場合
+
+1. Shift + cmd + d(WindowsはShift + Ctrl + d)で起動する環境リストから「todo_app(chrome)」を選択し、`main.dart`ファイルを起動している状態でF5で起動
+
+※ Chromeの場合は、-web--rendererオプションを指定しないまま起動すると２バイト文字がTofuになるので注意
