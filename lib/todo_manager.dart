@@ -1,3 +1,4 @@
+import 'package:todo_app/todo_service.dart';
 import 'package:uuid/uuid.dart';
 
 import 'observer.dart';
@@ -23,27 +24,28 @@ class TodoManager {
     _listeners.clear();
   }
 
-  void updateEditEnabled() {
+  Future<void> updateEditEnabled() async {
     for (var todo in _todos) {
       todo.isEditEnabled = false;
+      await TodoService.getInstance().set(todo);
     }
 
     _notifyListeners(_todos);
   }
 
-  void deleteTodo(int index) {
-    if (index < 0 || _todos.length <= index) {
-      return;
+  Future<void> deleteTodo(Todo todo, bool needNotify) async {
+    _todos.removeWhere((element) => element.id == todo.id);
+    await TodoService.getInstance().delete(todo);
+    if (needNotify) {
+      _notifyListeners(_todos);
     }
-    _todos.removeAt(index);
-    _notifyListeners(_todos);
   }
 
   bool _verifyUniqueId(String id) {
     return _todos.any((todo) => todo.id == id);
   }
 
-  void createNewTodo() {
+  Future<void> createNewTodo() async {
     const uuid = Uuid();
     var newId = uuid.v4();
     while (_verifyUniqueId(newId)) {
@@ -55,16 +57,30 @@ class TodoManager {
         isEditEnabled: true,
         id: newId);
     _todos.add(newTodo);
+    print('new _todos: ${_todos}');
+    await TodoService.getInstance().set(newTodo);
     _notifyListeners(_todos);
   }
 
-  void insertTodo(int index, Todo todo) {
+  Future<void> updateTodo(Todo item) async {
+    await TodoService.getInstance().set(item);
+  }
+
+  Future<void> insertTodo(int index, Todo todo) async {
     if (index < 0 || _todos.length <= index) {
       return;
     }
 
     _todos.insert(index, todo);
+    await TodoService.getInstance().set(todo);
     _notifyListeners(_todos);
+  }
+
+  Future<Iterable<Todo>> getAll() async {
+    final todos = await TodoService.getInstance().getAll();
+    _todos.addAll(todos);
+    print('todos: $_todos');
+    return todos;
   }
 
   void _notifyListeners(List<Todo> items) {

@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _createNewContent() {
-    TodoManager.getInstance().createNewTodo();
+  Future<void> _createNewContent() async {
+    await TodoManager.getInstance().createNewTodo();
   }
 }

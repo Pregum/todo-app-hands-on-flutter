@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'observer.dart';
+import 'todo_tile_widget.dart';
 import 'todo.dart';
 import 'todo_manager.dart';
+import 'todo_service.dart';
 
 class TodoScreen extends StatefulWidget {
   const TodoScreen({Key? key}) : super(key: key);
@@ -14,6 +16,7 @@ class TodoScreen extends StatefulWidget {
 class _TodoScreenState extends State<TodoScreen>
     implements Observer<List<Todo>> {
   List<Todo> _editTodos = <Todo>[];
+  late final future = _fetchContents();
 
   @override
   void initState() {
@@ -32,12 +35,12 @@ class _TodoScreenState extends State<TodoScreen>
     return FutureBuilder(
       builder: (BuildContext context, AsyncSnapshot<List<Todo>> snapshot) {
         if (!snapshot.hasData) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
 
-        return _buildListContents(snapshot.data);
+        return _buildListContents(_editTodos);
       },
-      future: _fetchContents(),
+      future: future,
     );
   }
 
@@ -53,10 +56,11 @@ class _TodoScreenState extends State<TodoScreen>
         child: ListView.builder(
             itemBuilder: (context, index) {
               final currentContent = contents[index];
-              return Dismissible(
-                key: Key(currentContent.id),
-                onDismissed: (direction) {
-                  TodoManager.getInstance().deleteTodo(index);
+              return TodoTileWidget(
+                todo: currentContent,
+                onDismiss: () async {
+                  await TodoManager.getInstance()
+                      .deleteTodo(currentContent, false);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Row(
@@ -80,47 +84,6 @@ class _TodoScreenState extends State<TodoScreen>
                     ),
                   );
                 },
-                background: Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(left: 8.0),
-                  color: Colors.red[500],
-                  child: const Icon(
-                    Icons.delete,
-                    color: Colors.black,
-                  ),
-                ),
-                child: Material(
-                  child: InkWell(
-                    onLongPress: !currentContent.isCompleted
-                        ? () {
-                            setState(() => currentContent.isEditEnabled = true);
-                          }
-                        : null,
-                    child: CheckboxListTile(
-                      value: currentContent.isCompleted,
-                      onChanged: (bool? value) {
-                        if (value == null) {
-                          return;
-                        }
-
-                        setState(() => currentContent.isCompleted = value);
-                      },
-                      title: currentContent.isEditEnabled
-                          ? TextField(
-                              onChanged: (value) => setState(
-                                  () => currentContent.taskName = value),
-                            )
-                          : Text(currentContent.taskName,
-                              style: currentContent.isCompleted
-                                  ? const TextStyle(
-                                      decoration: TextDecoration.lineThrough,
-                                      decorationStyle:
-                                          TextDecorationStyle.double,
-                                    )
-                                  : null),
-                    ),
-                  ),
-                ),
               );
             },
             itemCount: contents.length),
@@ -129,11 +92,9 @@ class _TodoScreenState extends State<TodoScreen>
   }
 
   Future<List<Todo>> _fetchContents() async {
+    final todos = await TodoManager.getInstance().getAll();
+    setState(() => _editTodos = todos.toList());
     return _editTodos;
-  }
-
-  void createNewContent() {
-    TodoManager.getInstance().createNewTodo();
   }
 
   @override

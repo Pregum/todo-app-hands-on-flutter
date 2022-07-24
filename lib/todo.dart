@@ -28,4 +28,9 @@ class Todo {
       required this.taskName,
       required this.isCompleted,
       required this.isEditEnabled});
+
+  @override
+  String toString() {
+    return id;
+  }
 }
