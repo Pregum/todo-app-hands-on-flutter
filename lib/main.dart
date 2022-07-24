@@ -1,6 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:todo_app/todo.dart';
+import 'package:todo_app/todo_manager.dart';
 
-void main() {
+import 'todo_screen.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Hiveのデータ取得するまでは読み込み画面を出す。.
+  // ref: https://github.com/rrousselGit/riverpod/issues/329#issuecomment-879099371
+  // Show a progress indicator while awaiting things
+  runApp(
+    const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: CircularProgressIndicator.adaptive(),
+        ),
+      ),
+    ),
+  );
+
+  await Hive.initFlutter();
+  Hive.registerAdapter(TodoAdapter());
+
   runApp(const MyApp());
 }
 
@@ -29,39 +52,32 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
+      body: const TodoScreen(),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: () {
+          _createNewContent();
+        },
+        tooltip: '新しいタスク',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  Future<void> _createNewContent() async {
+    await TodoManager.getInstance().createNewTodo(onFailed: () {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('現在編集中のTodoを確定してから新規追加してください。'),
+          duration: Duration(milliseconds: 1500),
+        ),
+      );
+    });
   }
 }
