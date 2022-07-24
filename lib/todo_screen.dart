@@ -4,7 +4,6 @@ import 'observer.dart';
 import 'todo_tile_widget.dart';
 import 'todo.dart';
 import 'todo_manager.dart';
-import 'todo_service.dart';
 
 class TodoScreen extends StatefulWidget {
   const TodoScreen({Key? key}) : super(key: key);

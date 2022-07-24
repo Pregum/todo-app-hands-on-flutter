@@ -49,6 +49,7 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
             },
             title: widget.todo.isEditEnabled
                 ? TextField(
+                    autofocus: widget.todo.isEditEnabled,
                     onChanged: (value) async {
                       setState(() => widget.todo.taskName = value);
                       await TodoManager.getInstance().updateTodo(widget.todo);

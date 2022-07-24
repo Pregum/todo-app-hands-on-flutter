@@ -1,5 +1,6 @@
 import 'package:todo_app/todo_service.dart';
 import 'package:uuid/uuid.dart';
+import 'package:collection/collection.dart';
 
 import 'observer.dart';
 import 'todo.dart';
@@ -10,6 +11,10 @@ class TodoManager {
   final List<Todo> _todos = [];
 
   final List<Observer<List<Todo>>> _listeners = [];
+
+  Todo? _editingTodo;
+
+  final _todoService = TodoService.getInstance();
 
   TodoManager._internal();
   factory TodoManager.getInstance() {
@@ -27,7 +32,7 @@ class TodoManager {
   Future<void> updateEditEnabled() async {
     for (var todo in _todos) {
       todo.isEditEnabled = false;
-      await TodoService.getInstance().set(todo);
+      await _todoService.set(todo);
     }
 
     _notifyListeners(_todos);
@@ -57,13 +62,17 @@ class TodoManager {
         isEditEnabled: true,
         id: newId);
     _todos.add(newTodo);
-    print('new _todos: ${_todos}');
-    await TodoService.getInstance().set(newTodo);
+    await _todoService.set(newTodo);
+    _editingTodo = newTodo;
     _notifyListeners(_todos);
   }
 
   Future<void> updateTodo(Todo item) async {
-    await TodoService.getInstance().set(item);
+    final target = _todos.firstWhereOrNull((todo) => todo.id == item.id);
+    if (target == null) {
+      return;
+    }
+    await _todoService.set(item);
   }
 
   Future<void> insertTodo(int index, Todo todo) async {
@@ -72,14 +81,13 @@ class TodoManager {
     }
 
     _todos.insert(index, todo);
-    await TodoService.getInstance().set(todo);
+    await _todoService.set(todo);
     _notifyListeners(_todos);
   }
 
   Future<Iterable<Todo>> getAll() async {
-    final todos = await TodoService.getInstance().getAll();
+    final todos = await _todoService.getAll();
     _todos.addAll(todos);
-    print('todos: $_todos');
     return todos;
   }
 
