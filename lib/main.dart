@@ -70,6 +70,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _createNewContent() async {
-    await TodoManager.getInstance().createNewTodo();
+    await TodoManager.getInstance().createNewTodo(onFailed: () {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('現在編集中のTodoを確定してから新規追加してください。'),
+          duration: Duration(milliseconds: 1500),
+        ),
+      );
+    });
   }
 }

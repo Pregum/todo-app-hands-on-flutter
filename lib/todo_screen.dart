@@ -16,16 +16,17 @@ class _TodoScreenState extends State<TodoScreen>
     implements Observer<List<Todo>> {
   List<Todo> _editTodos = <Todo>[];
   late final future = _fetchContents();
+  final _todoManager = TodoManager.getInstance();
 
   @override
   void initState() {
     super.initState();
-    TodoManager.getInstance().addListener(this);
+    _todoManager.addListener(this);
   }
 
   @override
   void dispose() {
-    TodoManager.getInstance().clearListenrs();
+    _todoManager.clearListenrs();
     super.dispose();
   }
 
@@ -43,51 +44,49 @@ class _TodoScreenState extends State<TodoScreen>
     );
   }
 
-  Widget _buildListContents(List<Todo>? contents) {
-    if (contents == null || contents.isEmpty) {
+  Widget _buildListContents(List<Todo>? todos) {
+    if (todos == null || todos.isEmpty) {
       return const Center(child: Text('タスクを追加しましょう！'));
     } else {
       return GestureDetector(
-        onTap: () {
+        onTap: () async {
           FocusScope.of(context).unfocus();
-          TodoManager.getInstance().updateEditEnabled();
+          await _todoManager.updateEditEnabled();
         },
         child: ListView.builder(
             itemBuilder: (context, index) {
-              final currentContent = contents[index];
+              final currentTodo = todos[index];
               return TodoTileWidget(
-                todo: currentContent,
+                todo: currentTodo,
                 onDismiss: () async {
-                  await TodoManager.getInstance()
-                      .deleteTodo(currentContent, false);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text('${currentContent.taskName}は削除されました。'),
-                        ],
-                      ),
-                      action: SnackBarAction(
-                        label: '元へ戻す',
-                        onPressed: () {
-                          TodoManager.getInstance()
-                              .insertTodo(index, currentContent);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('元へ戻しました'),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  );
+                  await _todoManager.deleteTodo(currentTodo, true);
+                  _showSnackbar(context, currentTodo, index);
                 },
               );
             },
-            itemCount: contents.length),
+            itemCount: todos.length),
       );
     }
+  }
+
+  void _showSnackbar(BuildContext context, Todo currentTodo, int index) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${currentTodo.taskName}は削除されました。'),
+        duration: const Duration(milliseconds: 1500),
+        action: SnackBarAction(
+          label: '元へ戻す',
+          onPressed: () async {
+            await _todoManager.insertTodo(index, currentTodo);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('元へ戻しました'),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   Future<List<Todo>> _fetchContents() async {
@@ -97,7 +96,7 @@ class _TodoScreenState extends State<TodoScreen>
   }
 
   @override
-  void onReceive(List<Todo> items) {
-    setState(() => _editTodos = items);
+  void onReceive(List<Todo> todos) {
+    setState(() => _editTodos = todos);
   }
 }

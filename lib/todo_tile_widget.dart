@@ -14,6 +14,21 @@ class TodoTileWidget extends StatefulWidget {
 }
 
 class _TodoTileWidgetState extends State<TodoTileWidget> {
+  final _textEditingController = TextEditingController();
+  final _todoManager = TodoManager.getInstance();
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController.text = widget.todo.taskName;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _textEditingController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dismissible(
@@ -33,8 +48,8 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
       child: Material(
         child: InkWell(
           onLongPress: !widget.todo.isCompleted
-              ? () {
-                  setState(() => widget.todo.isEditEnabled = true);
+              ? () async {
+                  await _todoManager.startEdit(widget.todo);
                 }
               : null,
           child: CheckboxListTile(
@@ -43,17 +58,21 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
               if (value == null) {
                 return;
               }
-
-              setState(() => widget.todo.isCompleted = value);
-              await TodoManager.getInstance().updateTodo(widget.todo);
+              widget.todo.isCompleted = value;
+              await _todoManager.updateTodo(widget.todo);
             },
             title: widget.todo.isEditEnabled
                 ? TextField(
                     autofocus: widget.todo.isEditEnabled,
                     onChanged: (value) async {
-                      setState(() => widget.todo.taskName = value);
-                      await TodoManager.getInstance().updateTodo(widget.todo);
+                      widget.todo.taskName = _textEditingController.text;
+                      await _todoManager.updateTodo(widget.todo);
                     },
+                    onSubmitted: (text) async {
+                      widget.todo.taskName = _textEditingController.text;
+                      await _todoManager.finishEdit(widget.todo);
+                    },
+                    controller: _textEditingController,
                   )
                 : Text(
                     widget.todo.taskName,

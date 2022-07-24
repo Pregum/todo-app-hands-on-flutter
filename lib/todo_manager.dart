@@ -8,10 +8,15 @@ import 'todo.dart';
 class TodoManager {
   static TodoManager? _ins;
 
+  /// 内部で保持しているtodoリスト
   final List<Todo> _todos = [];
 
+  /// 更新通知を届けるリスナー
   final List<Observer<List<Todo>>> _listeners = [];
 
+  /// 編集中の [Todo]
+  ///
+  /// 編集中のtodoがない場合は [null] が入ります。
   Todo? _editingTodo;
 
   final _todoService = TodoService.getInstance();
@@ -34,13 +39,17 @@ class TodoManager {
       todo.isEditEnabled = false;
       await _todoService.set(todo);
     }
+    _editingTodo = null;
 
     _notifyListeners(_todos);
   }
 
   Future<void> deleteTodo(Todo todo, bool needNotify) async {
     _todos.removeWhere((element) => element.id == todo.id);
-    await TodoService.getInstance().delete(todo);
+    if (_editingTodo?.id == todo.id) {
+      _editingTodo = null;
+    }
+    await _todoService.delete(todo);
     if (needNotify) {
       _notifyListeners(_todos);
     }
@@ -50,7 +59,12 @@ class TodoManager {
     return _todos.any((todo) => todo.id == id);
   }
 
-  Future<void> createNewTodo() async {
+  Future<void> createNewTodo({required Function() onFailed}) async {
+    if (_editingTodo != null) {
+      onFailed();
+      return;
+    }
+
     const uuid = Uuid();
     var newId = uuid.v4();
     while (_verifyUniqueId(newId)) {
@@ -73,6 +87,33 @@ class TodoManager {
       return;
     }
     await _todoService.set(item);
+    _notifyListeners(_todos);
+  }
+
+  Future<void> startEdit(Todo item) async {
+    final target = _todos.firstWhereOrNull((todo) => todo.id == item.id);
+    if (target == null) {
+      return;
+    }
+
+    target.isEditEnabled = true;
+    _editingTodo = target;
+    await _todoService.set(target);
+    _notifyListeners(_todos);
+  }
+
+  Future<void> finishEdit(Todo item) async {
+    final target = _todos.firstWhereOrNull((todo) => todo.id == item.id);
+    if (target == null) {
+      return;
+    }
+
+    target.isEditEnabled = false;
+    if (_editingTodo?.id == target.id) {
+      _editingTodo = null;
+    }
+    await _todoService.set(target);
+    _notifyListeners(_todos);
   }
 
   Future<void> insertTodo(int index, Todo todo) async {
