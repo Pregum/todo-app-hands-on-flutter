@@ -83,6 +83,7 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
                           )
                         : null,
                   ),
+            subtitle: Text('更新日: ${widget.todo.prettyUpdateAt}'),
           ),
         ),
       ),

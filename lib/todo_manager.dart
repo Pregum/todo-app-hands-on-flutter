@@ -70,11 +70,15 @@ class TodoManager {
     while (_verifyUniqueId(newId)) {
       newId = uuid.v4();
     }
+    final now = DateTime.now();
     final newTodo = Todo(
-        isCompleted: false,
-        taskName: 'new todo',
-        isEditEnabled: true,
-        id: newId);
+      isCompleted: false,
+      taskName: 'new todo',
+      isEditEnabled: true,
+      id: newId,
+      createdAt: now,
+      udatedAt: now,
+    );
     _todos.add(newTodo);
     await _todoService.set(newTodo);
     _editingTodo = newTodo;
@@ -86,6 +90,7 @@ class TodoManager {
     if (target == null) {
       return;
     }
+    target.updatedAt = DateTime.now();
     await _todoService.set(item);
     _notifyListeners(_todos);
   }
@@ -97,6 +102,7 @@ class TodoManager {
     }
 
     target.isEditEnabled = true;
+    target.updatedAt = DateTime.now();
     _editingTodo = target;
     await _todoService.set(target);
     _notifyListeners(_todos);
@@ -109,6 +115,7 @@ class TodoManager {
     }
 
     target.isEditEnabled = false;
+    target.updatedAt = DateTime.now();
     if (_editingTodo?.id == target.id) {
       _editingTodo = null;
     }
@@ -122,12 +129,14 @@ class TodoManager {
     }
 
     _todos.insert(index, todo);
+    todo.updatedAt = DateTime.now();
     await _todoService.set(todo);
     _notifyListeners(_todos);
   }
 
   Future<Iterable<Todo>> getAll() async {
-    final todos = await _todoService.getAll();
+    final todos = await _todoService.getAll()
+      ..sorted(((a, b) => a.createdAt.compareTo(b.createdAt)));
     _todos.addAll(todos);
     return todos;
   }
