@@ -17,6 +17,7 @@ class _TodoScreenState extends State<TodoScreen>
   List<Todo> _editTodos = <Todo>[];
   late final future = _fetchContents();
   final _todoManager = TodoManager.getInstance();
+  final _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -53,18 +54,24 @@ class _TodoScreenState extends State<TodoScreen>
           FocusScope.of(context).unfocus();
           await _todoManager.updateEditEnabled();
         },
-        child: ListView.builder(
-            itemBuilder: (context, index) {
-              final currentTodo = todos[index];
-              return TodoTileWidget(
-                todo: currentTodo,
-                onDismiss: () async {
-                  await _todoManager.deleteTodo(currentTodo, true);
-                  _showSnackbar(context, currentTodo, index);
-                },
-              );
-            },
-            itemCount: todos.length),
+        child: SingleChildScrollView(
+          child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              controller: _scrollController,
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              itemBuilder: (context, index) {
+                final currentTodo = todos[index];
+                return TodoTileWidget(
+                  todo: currentTodo,
+                  onDismiss: () async {
+                    await _todoManager.deleteTodo(currentTodo, true);
+                    _showSnackbar(context, currentTodo, index);
+                  },
+                );
+              },
+              itemCount: todos.length),
+        ),
       );
     }
   }
@@ -80,7 +87,7 @@ class _TodoScreenState extends State<TodoScreen>
             await _todoManager.insertTodo(index, currentTodo);
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('元へ戻しました'),
+                content: Text('元へ戻しました。'),
               ),
             );
           },
