@@ -39,7 +39,7 @@ class Todo {
       DateTime? createdAt,
       DateTime? udatedAt})
       : createdAt = createdAt ?? DateTime(2000),
-        updatedAt = createdAt ?? DateTime(2000);
+        updatedAt = udatedAt ?? DateTime(2000);
 
   @override
   String toString() {
