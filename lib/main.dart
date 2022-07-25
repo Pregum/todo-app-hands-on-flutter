@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:avoid_keyboard/avoid_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo_app/todo.dart';
@@ -52,6 +55,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final sc = StreamController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: const TodoScreen(),
+      body: TodoScreen(addTodoStream: sc.stream),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _createNewContent();
@@ -71,6 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _createNewContent() async {
+    var isFailure = false;
     await TodoManager.getInstance().createNewTodo(onFailed: () {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -78,6 +83,11 @@ class _MyHomePageState extends State<MyHomePage> {
           duration: Duration(milliseconds: 1500),
         ),
       );
+      isFailure = true;
     });
+
+    if (!isFailure) {
+      sc.sink.add(null);
+    }
   }
 }

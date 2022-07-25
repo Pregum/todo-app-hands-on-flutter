@@ -1,3 +1,4 @@
+import 'package:avoid_keyboard/avoid_keyboard.dart';
 import 'package:flutter/material.dart';
 
 import 'todo.dart';
@@ -62,17 +63,20 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
               await _todoManager.updateTodo(widget.todo);
             },
             title: widget.todo.isEditEnabled
-                ? TextField(
-                    autofocus: widget.todo.isEditEnabled,
-                    onChanged: (value) async {
-                      widget.todo.taskName = _textEditingController.text;
-                      await _todoManager.updateTodo(widget.todo);
-                    },
-                    onSubmitted: (text) async {
-                      widget.todo.taskName = _textEditingController.text;
-                      await _todoManager.finishEdit(widget.todo);
-                    },
-                    controller: _textEditingController,
+                ? Container(
+                    color: Colors.red,
+                    child: TextField(
+                      autofocus: widget.todo.isEditEnabled,
+                      onChanged: (value) async {
+                        widget.todo.taskName = _textEditingController.text;
+                        await _todoManager.updateTodo(widget.todo);
+                      },
+                      onSubmitted: (text) async {
+                        widget.todo.taskName = _textEditingController.text;
+                        await _todoManager.finishEdit(widget.todo);
+                      },
+                      controller: _textEditingController,
+                    ),
                   )
                 : Text(
                     widget.todo.taskName,

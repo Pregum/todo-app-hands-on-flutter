@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'observer.dart';
 import 'todo_tile_widget.dart';
@@ -6,7 +7,8 @@ import 'todo.dart';
 import 'todo_manager.dart';
 
 class TodoScreen extends StatefulWidget {
-  const TodoScreen({Key? key}) : super(key: key);
+  final Stream? addTodoStream;
+  const TodoScreen({Key? key, this.addTodoStream}) : super(key: key);
 
   @override
   State<TodoScreen> createState() => _TodoScreenState();
@@ -17,11 +19,21 @@ class _TodoScreenState extends State<TodoScreen>
   List<Todo> _editTodos = <Todo>[];
   late final future = _fetchContents();
   final _todoManager = TodoManager.getInstance();
+  final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _todoManager.addListener(this);
+    widget.addTodoStream?.listen((event) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.fastOutSlowIn,
+        );
+      });
+    });
   }
 
   @override
@@ -54,17 +66,20 @@ class _TodoScreenState extends State<TodoScreen>
           await _todoManager.updateEditEnabled();
         },
         child: ListView.builder(
-            itemBuilder: (context, index) {
-              final currentTodo = todos[index];
-              return TodoTileWidget(
-                todo: currentTodo,
-                onDismiss: () async {
-                  await _todoManager.deleteTodo(currentTodo, true);
-                  _showSnackbar(context, currentTodo, index);
-                },
-              );
-            },
-            itemCount: todos.length),
+          controller: _scrollController,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            final currentTodo = todos[index];
+            return TodoTileWidget(
+              todo: currentTodo,
+              onDismiss: () async {
+                await _todoManager.deleteTodo(currentTodo, true);
+                _showSnackbar(context, currentTodo, index);
+              },
+            );
+          },
+          itemCount: todos.length,
+        ),
       );
     }
   }
