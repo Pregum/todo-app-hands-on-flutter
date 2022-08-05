@@ -24,10 +24,10 @@ class Todo {
   bool isEditEnabled;
 
   /// 作成日時
-  @HiveField(5)
+  @HiveField(5, defaultValue: true)
   DateTime createdAt;
 
-  @HiveField(6)
+  @HiveField(6, defaultValue: true)
   DateTime updatedAt;
 
   /// ctor

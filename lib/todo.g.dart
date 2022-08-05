@@ -21,8 +21,12 @@ class TodoAdapter extends TypeAdapter<Todo> {
       taskName: fields[2] as String,
       isCompleted: fields[3] as bool,
       isEditEnabled: fields[4] as bool,
-      createdAt: fields[5] as DateTime?,
-    )..updatedAt = fields[6] as DateTime;
+      createdAt: fields[5] == null
+          ? DateTime(2000)
+          : fields[5] as DateTime? ?? DateTime(2000),
+    )..updatedAt = fields[6] == null
+        ? DateTime(2000)
+        : fields[6] as DateTime? ?? DateTime(2000);
   }
 
   @override
