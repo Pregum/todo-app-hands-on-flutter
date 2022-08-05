@@ -26,7 +26,7 @@ class _TodoScreenState extends State<TodoScreen>
     super.initState();
     _todoManager.addListener(this);
     widget.addTodoStream?.listen((event) {
-      SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 500),
