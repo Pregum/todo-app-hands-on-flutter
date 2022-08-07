@@ -19,26 +19,22 @@ class Todo {
   @HiveField(3)
   bool isCompleted;
 
-  /// タスクの編集中フラグ
-  @HiveField(4)
-  bool isEditEnabled;
-
   /// 作成日時
-  @HiveField(5, defaultValue: true)
+  @HiveField(4)
   DateTime createdAt;
 
-  @HiveField(6, defaultValue: true)
+  /// 更新日時
+  @HiveField(5)
   DateTime updatedAt;
 
   /// ctor
-  Todo(
-      {required this.id,
-      required this.taskName,
-      required this.isCompleted,
-      required this.isEditEnabled,
-      DateTime? createdAt,
-      DateTime? udatedAt})
-      : createdAt = createdAt ?? DateTime(2000),
+  Todo({
+    required this.id,
+    required this.taskName,
+    required this.isCompleted,
+    DateTime? createdAt,
+    DateTime? udatedAt,
+  })  : createdAt = createdAt ?? DateTime(2000),
         updatedAt = udatedAt ?? DateTime(2000);
 
   @override
@@ -47,6 +43,7 @@ class Todo {
   }
 }
 
+/// [Todo] クラスの拡張メソッド
 extension TodoEx on Todo {
   String get prettyUpdateAt {
     DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
