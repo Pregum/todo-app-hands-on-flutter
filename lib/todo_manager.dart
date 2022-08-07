@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:todo_app/todo_service.dart';
+import 'package:todo_app/todo_box.dart';
 import 'package:uuid/uuid.dart';
 import 'package:collection/collection.dart';
 
@@ -16,7 +16,7 @@ class TodoManager {
   /// 更新通知を届けるリスナー
   final List<Observer<List<Todo>>> _listeners = [];
 
-  final _todoService = TodoService.instance;
+  final _todoService = TodoBox.instance;
 
   static TodoManager get instance => _ins ?? TodoManager._getInstance();
 
@@ -31,15 +31,6 @@ class TodoManager {
 
   void clearListenrs() {
     _listeners.clear();
-  }
-
-  Future<void> updateEditEnabled() async {
-    for (var todo in _todos) {
-      todo.isEditEnabled = false;
-      await _todoService.set(todo);
-    }
-
-    _notifyListeners(_todos);
   }
 
   Future<void> deleteTodo(Todo todo) async {
@@ -62,7 +53,6 @@ class TodoManager {
     final newTodo = Todo(
       isCompleted: false,
       taskName: 'new todo',
-      isEditEnabled: true,
       id: newId,
       createdAt: now,
       udatedAt: now,

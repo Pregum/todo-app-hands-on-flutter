@@ -75,19 +75,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _createNewContent() async {
-    var isFailure = false;
-    await TodoManager.instance.createNewTodo(onFailed: () {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('現在編集中のTodoを確定してから新規追加してください。'),
-          duration: Duration(milliseconds: 1500),
-        ),
-      );
-      isFailure = true;
-    });
-
-    if (!isFailure) {
-      sc.sink.add(null);
-    }
+    await TodoManager.instance.createNewTodo();
   }
 }

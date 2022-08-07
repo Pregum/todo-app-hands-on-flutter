@@ -1,16 +1,16 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo_app/todo.dart';
 
-class TodoService {
+class TodoBox {
   final _boxName = 'todo';
   static const fiexedId = 1;
-  static TodoService? _ins;
+  static TodoBox? _ins;
 
-  static TodoService get instance => _ins ??= TodoService._getInstance();
+  static TodoBox get instance => _ins ??= TodoBox._getInstance();
 
-  TodoService._internal();
-  factory TodoService._getInstance() {
-    return _ins ??= TodoService._internal();
+  TodoBox._internal();
+  factory TodoBox._getInstance() {
+    return _ins ??= TodoBox._internal();
   }
 
   Future<Iterable<Todo>> getAll() async {
