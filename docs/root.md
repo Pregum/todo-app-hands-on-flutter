@@ -39,7 +39,7 @@ size: 16:9
   <li>UIのソースがWeb上で共有できる(DartPad)</li>
 </ul>
 
----
+<!-- ---
 <style scoped>
   .red-border {
     border: solid red;
@@ -55,7 +55,7 @@ size: 16:9
   <li class="red-border"> Debugツールが使いやすい </li>
   <li> 対応プラットフォームが多い </li>
   <li> UIのソースがWeb上で共有できる(DartPad) </li>
-</ul>
+</ul> -->
 
 ---
 ## なぜ他のXPではなくFlutterなのか？:thinking:
@@ -71,7 +71,16 @@ https://dartpad.dev/7942cc454f0937046632c7c61ea3e773
 ---
 ## 実行結果
 
-<img src="./images/counter_sample_1.png" height=440 />
+<style scoped>
+  .middle-center {
+    margin: 0 auto;
+    width: 100%;
+    object-fit: contain;
+    /* background-color: red; */
+  }
+</style>
+
+<img class="middle-center" src="./images/counter_sample_1.png" height=440 />
 
 
 ---
@@ -83,6 +92,8 @@ https://dartpad.dev/7942cc454f0937046632c7c61ea3e773
 ❌ MySQLなどのDBや端末のセンサを使用するライブラリは使用不可
 
 上記の点で実際の開発環境として使うのは厳しい 😓 
+
+軽く挙動を見たい時に使うのが良さそう
 
 ---
 ## ネイティブアプリとの違い 
@@ -140,7 +151,7 @@ FlutterのUIは全て**ウィジェット**
 * etc...
 
 ---
-#### FlutterのUIの仕組みについて
+### FlutterのUIの仕組みについて
 ウィジェットは大きく分けて2種類存在する
 
 * **状態(State)を持つStateful Widget**
@@ -152,7 +163,7 @@ FlutterのUIは全て**ウィジェット**
 最初はStateful Widgetを使っておけばOK:+1:
 
 ---
-#### Flutterは宣言的UI
+### Flutterは宣言的UI
 
 <style scoped>
   .left {
@@ -216,7 +227,7 @@ FlutterのUIは全て**ウィジェット**
 </div>
 
 ---
-## 何となくわかる図
+### 何となくわかる図
 
 <style scoped>
   .left {
@@ -244,11 +255,11 @@ FlutterのUIは全て**ウィジェット**
   <div class="right">
   <a href="https://twitter.com/gethackteam/status/1268892357027663873/photo/1"> https://twitter.com/gethackteam/status/1268892357027663873/photo/1</a>
 
-  左が宣言的UI、右が命令的UI
+  左が宣言的、右が命令的
 
-  左は進む(D), 戻る(R), ニュートラル(N), 駐車(P)の4つで**ギアを意識しなくて良い**
+  左は進む(D)の1つだけで**ギアを意識しなくて良い**
 
-  右は今自分がどの**ギアであるか意識しないといけない**
+  右は今どの**ギアにいるか意識しないといけない**
 
   </div>
 </div>
