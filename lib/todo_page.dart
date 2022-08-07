@@ -120,7 +120,11 @@ class _TodoPageState extends State<TodoPage> implements MyObserver<List<Todo>> {
               onPressed: () async {
                 Navigator.of(context).pop();
                 todo.taskName = textController.text;
-                await _todoManager.updateTodo(todo);
+                if (newItem) {
+                  await _todoManager.storeTodo(_todoManager.taskLength, todo);
+                } else {
+                  await _todoManager.updateTodo(todo);
+                }
               },
               child: const Text('OK'),
             ),
