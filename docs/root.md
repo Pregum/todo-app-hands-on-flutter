@@ -91,19 +91,176 @@ https://dartpad.dev/7942cc454f0937046632c7c61ea3e773
 
 ネイティブアプリ
 ✅  処理速度が速い
-:x: 各OSごとにコードを書く必要がある
+:x: 各プラットフォームごとにコードを書く必要がある
 
 Flutter
-✅  1つのソースで複数のOSのコードが実行可能
+✅  1つのソースで複数のプラットフォームで実行可能
 :x: ネイティブアプリに比べると処理速度が若干遅い
 
+---
+<style scoped>
+  .tes {
+    width: 100%;
+    justify-content: center;
+    align-content: center;
+    display: flex;
+    height: 60vh;
+    /* background-color: green; */
+    text-align: center;
+    line-height: 60vh;
+  }
+</style>
+
+<h2 class="tes"> 今日作るアプリについて </h2>
+
+# 今日作るアプリについて
+#### 今日のできる成果物
+
+機能一覧
+
+* タスク作成機能
+* タスク編集機能
+* タスク削除機能
+* タスク完了チェック機能
+
+https://github.com/Pregum/todo-app-hands-on-flutter
 
 
 
+---
+## アプリを作り始める前に
+
+#### FlutterのUIの仕組みについて
+
+FlutterのUIは全て**ウィジェット**
+
+* テキスト
+* ボタン
+* チェックボックス
+* etc...
+
+---
+#### FlutterのUIの仕組みについて
+ウィジェットは大きく分けて2種類存在する
+
+* **状態(State)を持つStateful Widget**
+  * setState()で状態を変更できる
+* **状態(State)を持たないStateless Widget**
+  * setState()は使用不可
+  * 親ウィジェットや外部から受け取るデータによって更新は可能
+
+最初はStateful Widgetを使っておけばOK:+1:
+
+---
+#### Flutterは宣言的UI
+
+<style scoped>
+  .left {
+    display: flex;
+    width: 48%;
+    flex-direction: column;
+  }
+  .center{
+    display: flex;
+    width: 4px;
+    margin: 8px;
+    background-color: black
+  }
+  .right {
+    display: flex;
+    width: 48%;
+    flex-direction: column;
+  }
+  .container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 16px;
+  }
+</style>
+
+<div class="container">
+  <div class="left">
+
+  ###### 宣言的UI (React, SwiftUI, etc...)
+
+    String name = 'taro';
+
+    Center(
+      child: Text('Hello $name'),
+    ),
+
+    // -> Hello taro
+
+  どのように配置させたいかだけを記述する。
+  </div>
+
+  <div class="center">
+  </div>
+
+  <div class="left">
+
+  ###### 命令的UI (UIkit, WinForms, etc...)
+
+      text.text = "taro"
+      text.textAlignment = NSTextAlignment.Center
+      text.frame = CGRect(
+        x: 50,
+        y: 50,
+        width: 50,
+        height: 50
+      )
+
+  レイアウトの配置からテキストの文字列まで細かくコードを記述する。
+    
+  </div>
+</div>
+
+---
+## 何となくわかる図
+
+<style scoped>
+  .left {
+    display: flex;
+    width: 48%;
+    flex-direction: column;
+  }
+  .right {
+    display: flex;
+    width: 48%;
+    flex-direction: column;
+    margin-left: 16px;
+  }
+  .container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 16px;
+  }
+</style>
 
 
+<div class="container">
+  <img class="left" src="images/declartive_vs_imperative.png" />
+
+  <div class="right">
+  <a href="https://twitter.com/gethackteam/status/1268892357027663873/photo/1"> https://twitter.com/gethackteam/status/1268892357027663873/photo/1</a>
+
+  左が宣言的UI、右が命令的UI
+
+  左は進む(D), 戻る(R), ニュートラル(N), 駐車(P)の4つで**ギアを意識しなくて良い**
+
+  右は今自分がどの**ギアであるか意識しないといけない**
+
+  </div>
+</div>
 
 
+---
+## 参考サイト
+
+
+* https://twitter.com/gethackteam/status/1268892357027663873?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1268892357027663873%7Ctwgr%5E12007820d2fc3fecbe0ca6381183ab580763b432%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Fqiita.com%2FHiroyuki_OSAKI%2Fitems%2Ff3f88ae535550e95389d
+
+* https://qiita.com/Hiroyuki_OSAKI/items/f3f88ae535550e95389d
 
 ---
 * Flutterとは(2min)
