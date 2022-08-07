@@ -4,17 +4,20 @@ import 'package:todo_app/todo_box.dart';
 import 'package:uuid/uuid.dart';
 import 'package:collection/collection.dart';
 
-import 'observer.dart';
+import 'my_observer.dart';
 import 'todo.dart';
 
+/// todoタスクを
 class TodoManager {
   static TodoManager? _ins;
 
   /// 内部で保持しているtodoリスト
   final List<Todo> _todos = [];
 
+  get taskLength => _todos.length;
+
   /// 更新通知を届けるリスナー
-  final List<Observer<List<Todo>>> _listeners = [];
+  final List<MyObserver<List<Todo>>> _listeners = [];
 
   final _todoService = TodoBox.instance;
 
@@ -25,7 +28,7 @@ class TodoManager {
     return _ins ??= TodoManager._internal();
   }
 
-  void addListener(Observer<List<Todo>> listener) {
+  void addListener(MyObserver<List<Todo>> listener) {
     _listeners.add(listener);
   }
 
@@ -57,9 +60,6 @@ class TodoManager {
       createdAt: now,
       udatedAt: now,
     );
-    _todos.add(newTodo);
-    await _todoService.set(newTodo);
-    _notifyListeners(_todos);
     _notifyCreationListeners([newTodo]);
   }
 
@@ -87,7 +87,7 @@ class TodoManager {
   }
 
   Future<void> storeTodo(int index, Todo todo) async {
-    if (index < 0 || _todos.length <= index) {
+    if (index < 0 || _todos.length < index) {
       return;
     }
 
@@ -112,7 +112,7 @@ class TodoManager {
 
   void _notifyCreationListeners(List<Todo> items) {
     for (var listener in _listeners) {
-      listener.onCreation(items);
+      listener.onCreate(items);
     }
   }
 }

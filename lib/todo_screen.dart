@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'observer.dart';
+import 'my_observer.dart';
 import 'todo_tile_widget.dart';
 import 'todo.dart';
 import 'todo_manager.dart';
@@ -13,7 +13,7 @@ class TodoScreen extends StatefulWidget {
 }
 
 class _TodoScreenState extends State<TodoScreen>
-    implements Observer<List<Todo>> {
+    implements MyObserver<List<Todo>> {
   List<Todo> _editTodos = <Todo>[];
   late final future = _fetchContents();
   final _todoManager = TodoManager.instance;
@@ -61,7 +61,7 @@ class _TodoScreenState extends State<TodoScreen>
               _showSnackbar(context, currentTodo, index);
             },
             onLongTap: () async {
-              await showTaskDialog(currentTodo);
+              await _showTaskDialog(currentTodo, newItem: false);
             },
           );
         },
@@ -91,13 +91,14 @@ class _TodoScreenState extends State<TodoScreen>
   }
 
   /// ダイアログを表示します。
-  Future<void> showTaskDialog(Todo todo) async {
+  Future<void> _showTaskDialog(Todo todo, {bool newItem = false}) async {
     final textController = TextEditingController(text: todo.taskName);
     return showDialog(
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('タスク名の編集'),
           content: TextField(
+            autofocus: true,
             controller: textController,
             decoration: const InputDecoration(
               hintText: 'タスク名を入力',
@@ -108,7 +109,11 @@ class _TodoScreenState extends State<TodoScreen>
               }
               Navigator.of(context).pop();
               todo.taskName = textController.text;
-              await _todoManager.updateTodo(todo);
+              if (newItem) {
+                await _todoManager.storeTodo(_todoManager.taskLength, todo);
+              } else {
+                await _todoManager.updateTodo(todo);
+              }
             },
           ),
           actions: <Widget>[
@@ -145,10 +150,10 @@ class _TodoScreenState extends State<TodoScreen>
   }
 
   @override
-  Future<void> onCreation(List<Todo> item) async {
+  Future<void> onCreate(List<Todo> item) async {
     if (item.isEmpty) {
       return;
     }
-    await showTaskDialog(item.first);
+    await _showTaskDialog(item.first, newItem: true);
   }
 }
