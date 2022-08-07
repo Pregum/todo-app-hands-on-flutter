@@ -236,7 +236,7 @@ FlutterのUIは全て**ウィジェット**
 命令的UIは**どのようにしたいかをコードで伝える** (How)
 
 ---
-### 何となくわかる図
+### 図で説明すると
 
 <style scoped>
   .left {
@@ -307,6 +307,37 @@ https://github.com/Pregum/todo-app-hands-on-flutter
 
 ssh
 `git@github.com:Pregum/todo-app-hands-on-flutter.git`
+
+---
+
+<style scoped>
+  img .bottom {
+
+  }
+</style>
+## サンプル(カウンターアプリ)動作確認
+
+CloneしたプロジェクトをAndroid エミュレータで動かしてみます。
+
+ここではVS Codeを使用します。
+
+`main.dart`をVSCode上で選択後、起動先エミュレータを設定します。
+
+![](images/image_1_1.png)
+
+---
+## 1つのタスクUI作成
+
+
+---
+## リスト形式に並べるUIを作成
+
+---
+## ウィジェット切り出し
+
+---
+## ローカルDB(Hive)のライブラリを追加
+
 
 
 
