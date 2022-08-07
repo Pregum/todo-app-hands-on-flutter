@@ -229,7 +229,7 @@ FlutterのUIは全て**ウィジェット**
 </div>
 
 ---
-### 簡単にいうと
+### 一言で表すと
 
 宣言的UIは**何をしたいかをコードで伝える** (What)
 
@@ -297,6 +297,17 @@ FlutterのUIは全て**ウィジェット**
 4. リスト形式に並べるUIを作成
 5. ウィジェット切り出し
 6. ローカルDB(Hive)のライブラリを追加
+
+---
+## プロジェクト作成
+
+下記URLからGit Cloneをお願いします。
+
+https://github.com/Pregum/todo-app-hands-on-flutter
+
+ssh
+`git@github.com:Pregum/todo-app-hands-on-flutter.git`
+
 
 
 ---
