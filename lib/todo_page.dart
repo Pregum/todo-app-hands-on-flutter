@@ -5,15 +5,14 @@ import 'todo_tile_widget.dart';
 import 'todo.dart';
 import 'todo_manager.dart';
 
-class TodoScreen extends StatefulWidget {
-  const TodoScreen({Key? key}) : super(key: key);
+class TodoPage extends StatefulWidget {
+  const TodoPage({Key? key}) : super(key: key);
 
   @override
-  State<TodoScreen> createState() => _TodoScreenState();
+  State<TodoPage> createState() => _TodoPageState();
 }
 
-class _TodoScreenState extends State<TodoScreen>
-    implements MyObserver<List<Todo>> {
+class _TodoPageState extends State<TodoPage> implements MyObserver<List<Todo>> {
   List<Todo> _editTodos = <Todo>[];
   late final future = _fetchContents();
   final _todoManager = TodoManager.instance;

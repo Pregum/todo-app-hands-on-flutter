@@ -5,7 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo_app/todo.dart';
 import 'package:todo_app/todo_manager.dart';
 
-import 'todo_screen.dart';
+import 'todo_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: const TodoScreen(),
+      body: const TodoPage(),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await _createNewContent();
