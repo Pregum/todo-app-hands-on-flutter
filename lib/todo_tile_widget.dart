@@ -50,7 +50,6 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
         child: Material(
           child: InkWell(
             onLongPress: () async {
-              // await _todoManager.startEdit(widget.todo);
               _showDialog(widget.todo);
             },
             child: CheckboxListTile(

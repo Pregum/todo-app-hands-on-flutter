@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 import 'observer.dart';
 import 'todo_tile_widget.dart';
@@ -7,8 +6,7 @@ import 'todo.dart';
 import 'todo_manager.dart';
 
 class TodoScreen extends StatefulWidget {
-  final Stream? addTodoStream;
-  const TodoScreen({Key? key, this.addTodoStream}) : super(key: key);
+  const TodoScreen({Key? key}) : super(key: key);
 
   @override
   State<TodoScreen> createState() => _TodoScreenState();
@@ -25,15 +23,6 @@ class _TodoScreenState extends State<TodoScreen>
   void initState() {
     super.initState();
     _todoManager.addListener(this);
-    widget.addTodoStream?.listen((event) {
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.fastOutSlowIn,
-        );
-      });
-    });
   }
 
   @override
@@ -73,7 +62,7 @@ class _TodoScreenState extends State<TodoScreen>
             return TodoTileWidget(
               todo: currentTodo,
               onDismiss: () async {
-                await _todoManager.deleteTodo(currentTodo, true);
+                await _todoManager.deleteTodo(currentTodo);
                 _showSnackbar(context, currentTodo, index);
               },
             );
@@ -92,7 +81,7 @@ class _TodoScreenState extends State<TodoScreen>
         action: SnackBarAction(
           label: '元へ戻す',
           onPressed: () async {
-            await _todoManager.insertTodo(index, currentTodo);
+            await _todoManager.restoreTodo(index, currentTodo);
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('元へ戻しました。'),

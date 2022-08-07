@@ -63,10 +63,10 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: TodoScreen(addTodoStream: sc.stream),
+      body: const TodoScreen(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _createNewContent();
+        onPressed: () async {
+          await _createNewContent();
         },
         tooltip: '新しいタスク',
         child: const Icon(Icons.add),

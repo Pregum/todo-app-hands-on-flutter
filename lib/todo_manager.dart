@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:todo_app/todo_service.dart';
 import 'package:uuid/uuid.dart';
 import 'package:collection/collection.dart';
@@ -13,11 +15,6 @@ class TodoManager {
 
   /// 更新通知を届けるリスナー
   final List<Observer<List<Todo>>> _listeners = [];
-
-  /// 編集中の [Todo]
-  ///
-  /// 編集中のtodoがない場合は [null] が入ります。
-  Todo? _editingTodo;
 
   final _todoService = TodoService.instance;
 
@@ -41,16 +38,12 @@ class TodoManager {
       todo.isEditEnabled = false;
       await _todoService.set(todo);
     }
-    _editingTodo = null;
 
     _notifyListeners(_todos);
   }
 
   Future<void> deleteTodo(Todo todo, bool needNotify) async {
     _todos.removeWhere((element) => element.id == todo.id);
-    if (_editingTodo?.id == todo.id) {
-      _editingTodo = null;
-    }
     await _todoService.delete(todo);
     if (needNotify) {
       _notifyListeners(_todos);
@@ -61,12 +54,7 @@ class TodoManager {
     return _todos.any((todo) => todo.id == id);
   }
 
-  Future<void> createNewTodo({required Function() onFailed}) async {
-    if (_editingTodo != null) {
-      onFailed();
-      return;
-    }
-
+  Future<void> createNewTodo() async {
     const uuid = Uuid();
     var newId = uuid.v4();
     while (_verifyUniqueId(newId)) {
@@ -83,7 +71,6 @@ class TodoManager {
     );
     _todos.add(newTodo);
     await _todoService.set(newTodo);
-    _editingTodo = newTodo;
     _notifyListeners(_todos);
   }
 
@@ -97,35 +84,20 @@ class TodoManager {
     _notifyListeners(_todos);
   }
 
-  Future<void> startEdit(Todo item) async {
-    final target = _todos.firstWhereOrNull((todo) => todo.id == item.id);
-    if (target == null) {
+  Future<void> restoreTodo(int index, Todo todo) async {
+    var correctedIndex = index;
+    if (index < 0) {
       return;
+    } else if (_todos.length <= index) {
+      correctedIndex = max(0, _todos.length - 1);
     }
 
-    target.isEditEnabled = true;
-    target.updatedAt = DateTime.now();
-    _editingTodo = target;
-    await _todoService.set(target);
+    _todos.insert(correctedIndex, todo);
+    await _todoService.set(todo);
     _notifyListeners(_todos);
   }
 
-  Future<void> finishEdit(Todo item) async {
-    final target = _todos.firstWhereOrNull((todo) => todo.id == item.id);
-    if (target == null) {
-      return;
-    }
-
-    target.isEditEnabled = false;
-    target.updatedAt = DateTime.now();
-    if (_editingTodo?.id == target.id) {
-      _editingTodo = null;
-    }
-    await _todoService.set(target);
-    _notifyListeners(_todos);
-  }
-
-  Future<void> insertTodo(int index, Todo todo) async {
+  Future<void> storeTodo(int index, Todo todo) async {
     if (index < 0 || _todos.length <= index) {
       return;
     }
