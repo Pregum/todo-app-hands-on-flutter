@@ -125,7 +125,9 @@ Flutter
 <h2 class="tes"> 今日作るアプリについて </h2>
 
 # 今日作るアプリについて
-#### 今日のできる成果物
+#### 今日できる成果物
+
+https://github.com/Pregum/todo-app-hands-on-flutter
 
 機能一覧
 
@@ -134,14 +136,13 @@ Flutter
 * タスク削除機能
 * タスク完了チェック機能
 
-https://github.com/Pregum/todo-app-hands-on-flutter
 
 
 
 ---
 ## アプリを作り始める前に
 
-#### FlutterのUIの仕組みについて
+#### FlutterのUIについて
 
 FlutterのUIは全て**ウィジェット**
 
@@ -151,14 +152,14 @@ FlutterのUIは全て**ウィジェット**
 * etc...
 
 ---
-### FlutterのUIの仕組みについて
+### FlutterのUIについて
 ウィジェットは大きく分けて2種類存在する
 
 * **状態(State)を持つStateful Widget**
-  * setState()で状態を変更できる
+  * setState()で状態を変更可能
 * **状態(State)を持たないStateless Widget**
   * setState()は使用不可
-  * 親ウィジェットや外部から受け取るデータによって更新は可能
+  * 親ウィジェットや外部から受け取るデータによって更新可能
 
 最初はStateful Widgetを使っておけばOK:+1:
 
@@ -202,7 +203,7 @@ FlutterのUIは全て**ウィジェット**
 
     // -> Hello taro
 
-  どのように配置させたいかだけを記述する。
+  何を表示させるかを記述する。
   </div>
 
   <div class="center">
@@ -212,14 +213,14 @@ FlutterのUIは全て**ウィジェット**
 
   ###### 命令的UI (UIkit, WinForms, etc...)
 
-      text.text = "taro"
-      text.textAlignment = NSTextAlignment.Center
-      text.frame = CGRect(
-        x: 50,
-        y: 50,
-        width: 50,
-        height: 50
-      )
+    text.frame = CGRect(
+      x: 50,
+      y: 50,
+      width: 50,
+      height: 50
+    )
+    text.text = "taro"
+    text.textAlignment = NSTextAlignment.Center
 
   レイアウトの配置からテキストの文字列まで記述する。
     
@@ -229,13 +230,9 @@ FlutterのUIは全て**ウィジェット**
 ---
 ### 簡単にいうと
 
-宣言的UIは「画面中央にテキストを配置して、表示する文字はこれ」と指示する
---> 画面に描画する具体的な処理は、コンパイラにお任せ
-<!-- --> 高さが変わってもコンパイラが勝手にやってくれる -->
+宣言的UIは**何をしたいかをコードで伝える** (What)
 
-命令的UIは「テキストを中央揃えに設定...」と指示する
---> 描画する具体的な処理についても指示を出す
-<!-- --> 文字が更新された時、高さの調整なども自分で指示する -->
+命令的UIは**どのようにしたいかをコードで伝える** (How)
 
 ---
 ### 何となくわかる図
@@ -275,6 +272,22 @@ FlutterのUIは全て**ウィジェット**
   </div>
 </div>
 
+---
+## Todoアプリの主なウィジェット
+
+* MaterialApp
+  * ウィジェットの根本にとりあえず置いておくウィジェット
+
+* Scaffold
+  * 画面の大枠を作ってくれるウィジェット
+
+* ListView
+  * いい感じにリスト形式で表示してくれる便利なウィジェット 
+
+* Container
+  * 十徳ナイフのような万能ウィジェット
+
+
 
 ---
 ## 参考サイト
@@ -283,6 +296,8 @@ FlutterのUIは全て**ウィジェット**
 * https://twitter.com/gethackteam/status/1268892357027663873?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1268892357027663873%7Ctwgr%5E12007820d2fc3fecbe0ca6381183ab580763b432%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Fqiita.com%2FHiroyuki_OSAKI%2Fitems%2Ff3f88ae535550e95389d
 
 * https://qiita.com/Hiroyuki_OSAKI/items/f3f88ae535550e95389d
+
+* https://ui.dev/imperative-vs-declarative-programming
 
 ---
 * Flutterとは(2min)
