@@ -49,26 +49,20 @@ class _TodoScreenState extends State<TodoScreen>
     if (todos == null || todos.isEmpty) {
       return const Center(child: Text('タスクを追加しましょう！'));
     } else {
-      return GestureDetector(
-        onTap: () async {
-          FocusScope.of(context).unfocus();
-          await _todoManager.updateEditEnabled();
+      return ListView.builder(
+        controller: _scrollController,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          final currentTodo = todos[index];
+          return TodoTileWidget(
+            todo: currentTodo,
+            onDismiss: () async {
+              await _todoManager.deleteTodo(currentTodo);
+              _showSnackbar(context, currentTodo, index);
+            },
+          );
         },
-        child: ListView.builder(
-          controller: _scrollController,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            final currentTodo = todos[index];
-            return TodoTileWidget(
-              todo: currentTodo,
-              onDismiss: () async {
-                await _todoManager.deleteTodo(currentTodo);
-                _showSnackbar(context, currentTodo, index);
-              },
-            );
-          },
-          itemCount: todos.length,
-        ),
+        itemCount: todos.length,
       );
     }
   }

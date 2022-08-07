@@ -42,12 +42,10 @@ class TodoManager {
     _notifyListeners(_todos);
   }
 
-  Future<void> deleteTodo(Todo todo, bool needNotify) async {
+  Future<void> deleteTodo(Todo todo) async {
     _todos.removeWhere((element) => element.id == todo.id);
     await _todoService.delete(todo);
-    if (needNotify) {
-      _notifyListeners(_todos);
-    }
+    _notifyListeners(_todos);
   }
 
   bool _verifyUniqueId(String id) {
