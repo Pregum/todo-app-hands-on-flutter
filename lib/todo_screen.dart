@@ -60,6 +60,9 @@ class _TodoScreenState extends State<TodoScreen>
               await _todoManager.deleteTodo(currentTodo);
               _showSnackbar(context, currentTodo, index);
             },
+            onLongTap: () async {
+              await showTaskDialog(currentTodo);
+            },
           );
         },
         itemCount: todos.length,
@@ -87,6 +90,49 @@ class _TodoScreenState extends State<TodoScreen>
     );
   }
 
+  /// ダイアログを表示します。
+  Future<void> showTaskDialog(Todo todo) async {
+    final textController = TextEditingController(text: todo.taskName);
+    return showDialog(
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('タスク名の編集'),
+          content: TextField(
+            controller: textController,
+            decoration: const InputDecoration(
+              hintText: 'タスク名を入力',
+            ),
+            onSubmitted: (value) async {
+              if (value.isEmpty) {
+                return;
+              }
+              Navigator.of(context).pop();
+              todo.taskName = textController.text;
+              await _todoManager.updateTodo(todo);
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                todo.taskName = textController.text;
+                await _todoManager.updateTodo(todo);
+              },
+              child: const Text('OK'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+      context: context,
+    );
+  }
+
   Future<List<Todo>> _fetchContents() async {
     final todos = await TodoManager.instance.getAll();
     setState(() => _editTodos = todos.toList());
@@ -96,5 +142,13 @@ class _TodoScreenState extends State<TodoScreen>
   @override
   void onReceive(List<Todo> todos) {
     setState(() => _editTodos = todos);
+  }
+
+  @override
+  Future<void> onCreation(List<Todo> item) async {
+    if (item.isEmpty) {
+      return;
+    }
+    await showTaskDialog(item.first);
   }
 }

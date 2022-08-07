@@ -6,8 +6,13 @@ import 'todo_manager.dart';
 class TodoTileWidget extends StatefulWidget {
   final Todo todo;
   final Function()? onDismiss;
-  const TodoTileWidget({Key? key, required this.todo, this.onDismiss})
-      : super(key: key);
+  final Function()? onLongTap;
+  const TodoTileWidget({
+    Key? key,
+    required this.todo,
+    this.onDismiss,
+    this.onLongTap,
+  }) : super(key: key);
 
   @override
   State<TodoTileWidget> createState() => _TodoTileWidgetState();
@@ -50,7 +55,7 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
         child: Material(
           child: InkWell(
             onLongPress: () async {
-              _showDialog(widget.todo);
+              widget.onLongTap?.call();
             },
             child: CheckboxListTile(
               value: widget.todo.isCompleted,
@@ -75,41 +80,6 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
           ),
         ),
       ),
-    );
-  }
-
-  /// ダイアログを表示します。
-  Future<void> _showDialog(Todo todo) async {
-    final textController = TextEditingController(text: todo.taskName);
-    return showDialog(
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('タスク名の編集'),
-          content: TextField(
-            controller: textController,
-            decoration: const InputDecoration(
-              hintText: 'タスク名を入力',
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () async {
-                Navigator.of(context).pop();
-                todo.taskName = textController.text;
-                await _todoManager.updateTodo(todo);
-              },
-              child: const Text('OK'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
-        );
-      },
-      context: context,
     );
   }
 }

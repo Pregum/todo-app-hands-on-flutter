@@ -60,6 +60,7 @@ class TodoManager {
     _todos.add(newTodo);
     await _todoService.set(newTodo);
     _notifyListeners(_todos);
+    _notifyCreationListeners([newTodo]);
   }
 
   Future<void> updateTodo(Todo item) async {
@@ -106,6 +107,12 @@ class TodoManager {
   void _notifyListeners(List<Todo> items) {
     for (var listener in _listeners) {
       listener.onReceive(items);
+    }
+  }
+
+  void _notifyCreationListeners(List<Todo> items) {
+    for (var listener in _listeners) {
+      listener.onCreation(items);
     }
   }
 }
