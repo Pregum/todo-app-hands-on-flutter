@@ -2,7 +2,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo_app/todo.dart';
 
 class TodoBox {
-  final _boxName = 'todo';
+  final _boxName = 'todos';
   static const fiexedId = 1;
   static TodoBox? _ins;
 

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:avoid_keyboard/avoid_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo_app/todo.dart';

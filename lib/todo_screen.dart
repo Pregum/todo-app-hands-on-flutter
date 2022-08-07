@@ -17,7 +17,6 @@ class _TodoScreenState extends State<TodoScreen>
   List<Todo> _editTodos = <Todo>[];
   late final future = _fetchContents();
   final _todoManager = TodoManager.instance;
-  final _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -47,10 +46,11 @@ class _TodoScreenState extends State<TodoScreen>
 
   Widget _buildListContents(List<Todo>? todos) {
     if (todos == null || todos.isEmpty) {
-      return const Center(child: Text('タスクを追加しましょう！'));
+      return const Center(
+        child: Text('タスクを追加しましょう！'),
+      );
     } else {
       return ListView.builder(
-        controller: _scrollController,
         shrinkWrap: true,
         itemBuilder: (context, index) {
           final currentTodo = todos[index];
