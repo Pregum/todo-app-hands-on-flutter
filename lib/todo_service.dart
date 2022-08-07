@@ -6,7 +6,7 @@ class TodoService {
   static const fiexedId = 1;
   static TodoService? _ins;
 
-  static get instance => TodoService._getInstance();
+  static TodoService get instance => _ins ??= TodoService._getInstance();
 
   TodoService._internal();
   factory TodoService._getInstance() {

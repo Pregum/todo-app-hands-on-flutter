@@ -137,8 +137,8 @@ class TodoManager {
   }
 
   Future<Iterable<Todo>> getAll() async {
-    final todos = await _todoService.getAll()
-      ..sorted(((a, b) => a.createdAt.compareTo(b.createdAt)));
+    final todos = await _todoService.getAll();
+    todos.sorted(((a, b) => a.createdAt.compareTo(b.createdAt)));
     _todos.addAll(todos);
     return todos;
   }
