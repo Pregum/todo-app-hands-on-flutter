@@ -33,6 +33,7 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
   Widget build(BuildContext context) {
     return Dismissible(
       key: Key(widget.todo.id),
+      direction: DismissDirection.startToEnd,
       onDismissed: (direction) {
         widget.onDismiss?.call();
       },
@@ -45,51 +46,71 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
           color: Colors.black,
         ),
       ),
-      child: Material(
-        child: InkWell(
-          onLongPress: !widget.todo.isCompleted
-              ? () async {
-                  await _todoManager.startEdit(widget.todo);
-                }
-              : null,
-          child: CheckboxListTile(
-            value: widget.todo.isCompleted,
-            onChanged: (bool? value) async {
-              if (value == null) {
-                return;
-              }
-              widget.todo.isCompleted = value;
-              await _todoManager.updateTodo(widget.todo);
+      child: Card(
+        child: Material(
+          child: InkWell(
+            onLongPress: () async {
+              // await _todoManager.startEdit(widget.todo);
+              _showDialog(widget.todo);
             },
-            title: widget.todo.isEditEnabled
-                ? Container(
-                    color: Colors.red,
-                    child: TextField(
-                      autofocus: widget.todo.isEditEnabled,
-                      onChanged: (value) async {
-                        widget.todo.taskName = _textEditingController.text;
-                        await _todoManager.updateTodo(widget.todo);
-                      },
-                      onSubmitted: (text) async {
-                        widget.todo.taskName = _textEditingController.text;
-                        await _todoManager.finishEdit(widget.todo);
-                      },
-                      controller: _textEditingController,
-                    ),
-                  )
-                : Text(
-                    widget.todo.taskName,
-                    style: widget.todo.isCompleted
-                        ? const TextStyle(
-                            decoration: TextDecoration.lineThrough,
-                            decorationStyle: TextDecorationStyle.double,
-                          )
-                        : null,
-                  ),
-            subtitle: Text('更新日: ${widget.todo.prettyUpdateAt}'),
+            child: CheckboxListTile(
+              value: widget.todo.isCompleted,
+              onChanged: (bool? value) async {
+                if (value == null) {
+                  return;
+                }
+                widget.todo.isCompleted = value;
+                await _todoManager.updateTodo(widget.todo);
+              },
+              title: Text(
+                widget.todo.taskName,
+                style: widget.todo.isCompleted
+                    ? const TextStyle(
+                        decoration: TextDecoration.lineThrough,
+                        decorationStyle: TextDecorationStyle.double,
+                      )
+                    : null,
+              ),
+              subtitle: Text('更新日: ${widget.todo.prettyUpdateAt}'),
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  /// ダイアログを表示します。
+  Future<void> _showDialog(Todo todo) async {
+    final textController = TextEditingController(text: todo.taskName);
+    return showDialog(
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('タスク名の編集'),
+          content: TextField(
+            controller: textController,
+            decoration: const InputDecoration(
+              hintText: 'タスク名を入力',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                todo.taskName = textController.text;
+                await _todoManager.updateTodo(todo);
+              },
+              child: const Text('OK'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+      context: context,
     );
   }
 }
