@@ -1,4 +1,3 @@
-import 'package:avoid_keyboard/avoid_keyboard.dart';
 import 'package:flutter/material.dart';
 
 import 'todo.dart';
@@ -16,7 +15,7 @@ class TodoTileWidget extends StatefulWidget {
 
 class _TodoTileWidgetState extends State<TodoTileWidget> {
   final _textEditingController = TextEditingController();
-  final _todoManager = TodoManager.getInstance();
+  final _todoManager = TodoManager.instance;
 
   @override
   void initState() {

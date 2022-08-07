@@ -19,10 +19,12 @@ class TodoManager {
   /// 編集中のtodoがない場合は [null] が入ります。
   Todo? _editingTodo;
 
-  final _todoService = TodoService.getInstance();
+  final _todoService = TodoService.instance;
+
+  static TodoManager get instance => _ins ?? TodoManager._getInstance();
 
   TodoManager._internal();
-  factory TodoManager.getInstance() {
+  factory TodoManager._getInstance() {
     return _ins ??= TodoManager._internal();
   }
 

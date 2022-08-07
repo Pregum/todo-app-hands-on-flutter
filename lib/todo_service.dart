@@ -4,11 +4,12 @@ import 'package:todo_app/todo.dart';
 class TodoService {
   final _boxName = 'todo';
   static const fiexedId = 1;
-
   static TodoService? _ins;
 
+  static get instance => TodoService._getInstance();
+
   TodoService._internal();
-  factory TodoService.getInstance() {
+  factory TodoService._getInstance() {
     return _ins ??= TodoService._internal();
   }
 

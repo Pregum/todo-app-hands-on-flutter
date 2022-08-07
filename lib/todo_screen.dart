@@ -18,7 +18,7 @@ class _TodoScreenState extends State<TodoScreen>
     implements Observer<List<Todo>> {
   List<Todo> _editTodos = <Todo>[];
   late final future = _fetchContents();
-  final _todoManager = TodoManager.getInstance();
+  final _todoManager = TodoManager.instance;
   final _scrollController = ScrollController();
 
   @override
@@ -26,7 +26,7 @@ class _TodoScreenState extends State<TodoScreen>
     super.initState();
     _todoManager.addListener(this);
     widget.addTodoStream?.listen((event) {
-      SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 500),
@@ -105,7 +105,7 @@ class _TodoScreenState extends State<TodoScreen>
   }
 
   Future<List<Todo>> _fetchContents() async {
-    final todos = await TodoManager.getInstance().getAll();
+    final todos = await TodoManager.instance.getAll();
     setState(() => _editTodos = todos.toList());
     return _editTodos;
   }
