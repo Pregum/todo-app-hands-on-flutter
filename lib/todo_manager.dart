@@ -68,7 +68,7 @@ class TodoManager {
   ///
   /// boxへ保存する場合は[storeTodo]メソッドで保存してください。
   ///
-  /// [onCreate] メソッドで作成通知が飛びます。
+  /// [onCreate] メソッドが呼ばれます。
   Future<void> createNewTodo() async {
     const uuid = Uuid();
     var newId = uuid.v4();
