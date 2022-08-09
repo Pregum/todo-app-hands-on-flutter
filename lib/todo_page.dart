@@ -50,7 +50,6 @@ class _TodoPageState extends State<TodoPage> implements MyObserver<List<Todo>> {
       );
     } else {
       return ListView.builder(
-        shrinkWrap: true,
         itemBuilder: (context, index) {
           final currentTodo = todos[index];
           return TodoTileWidget(
