@@ -52,32 +52,25 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
         ),
       ),
       child: Card(
-        child: Material(
-          child: InkWell(
-            onLongPress: () async {
-              widget.onLongTap?.call();
-            },
-            child: CheckboxListTile(
-              value: widget.todo.isCompleted,
-              onChanged: (bool? value) async {
-                if (value == null) {
-                  return;
-                }
-                widget.todo.isCompleted = value;
-                await _todoManager.updateTodo(widget.todo);
-              },
-              title: Text(
-                widget.todo.taskName,
-                style: widget.todo.isCompleted
-                    ? const TextStyle(
-                        decoration: TextDecoration.lineThrough,
-                        decorationStyle: TextDecorationStyle.double,
-                      )
-                    : null,
-              ),
-              subtitle: Text('更新日: ${widget.todo.prettyUpdateAt}'),
-            ),
+        child: CheckboxListTile(
+          value: widget.todo.isCompleted,
+          onChanged: (bool? value) async {
+            if (value == null) {
+              return;
+            }
+            widget.todo.isCompleted = value;
+            await _todoManager.updateTodo(widget.todo);
+          },
+          title: Text(
+            widget.todo.taskName,
+            style: widget.todo.isCompleted
+                ? const TextStyle(
+                    decoration: TextDecoration.lineThrough,
+                    decorationStyle: TextDecorationStyle.double,
+                  )
+                : null,
           ),
+          subtitle: Text('更新日: ${widget.todo.prettyUpdateAt}'),
         ),
       ),
     );
