@@ -366,7 +366,8 @@ CloneしたプロジェクトをAndroid エミュレータで動かしてみま�
 ## 1つのタスクUI作成
 #### TodoTileWidgetクラスの作成
 
-* `todo_tile_widget.dart` ファイルを作成し、`TodoTileWidget` クラスを作成します。
+`todo_tile_widget.dart` ファイルを作成し、
+ファイル内に`TodoTileWidget` クラスを作成します。
 
 ```dart
 class TodoTileWidget extends StatefulWidget {
@@ -470,10 +471,8 @@ dev_dependencies:
 ```dart
 class TodoTileWidget extends StatefulWidget {
   final Todo todo;
-  const TodoTileWidget({
-    Key? key,
-    required this.todo,
-  }) : super(key: key);
+  const TodoTileWidget({ Key? key, required this.todo, })
+   : super(key: key);
 }
 
 class _TodoTileWidgetState extends State<TodoTileWidget> {
@@ -491,7 +490,7 @@ Widget build(BuildContext context) {
   return Card(
     child: CheckboxListTile(
       value: /* check用の変数を設定 */
-      onChanged: (bool value) { /* チェックのON/OFF時のコールバックを設定 */ } 
+      onChanged: (bool? value) { /* チェックのON/OFF時のコールバックを設定 */ } 
       title: Text(/* ここにタスク名を設定 */), 
       subtitle: Text(/* ここに更新日を設定 */), 
     )
@@ -539,7 +538,7 @@ class TodoTileWidget extends StatefulWidget {
 ```
 
 ---
-## リスト形式に並べるUIを作成
+## リスト形式のUIを作成
 
 #### todo_page.dartファイルの作成
 
@@ -558,7 +557,7 @@ class _TodoPageState extends State<TodoPage> {
 ```
 
 ---
-## リスト形式に並べるUIを作成
+## リスト形式のUIを作成
 
 #### TodoTileWidget ウィジェットを配置
 
@@ -571,12 +570,6 @@ Widget build(BuildContext context) {
   return TodoTileWidget(todo: Todo);
 }
 ```
-
----
-## ウィジェット切り出し
-
----
-## ローカルDB(Hive)のライブラリを追加
 
 
 
