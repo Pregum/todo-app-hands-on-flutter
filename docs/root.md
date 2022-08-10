@@ -212,7 +212,7 @@ FlutterのUIは全て**ウィジェット**
 
   <div class="left">
 
-  ###### 命令的UI (UIkit, WinForms, etc...)
+  ###### 命令的UI (UIKit, WinForms, etc...)
 
     text.frame = CGRect(
       x: 50,
@@ -236,7 +236,15 @@ FlutterのUIは全て**ウィジェット**
 命令的UIは**どのようにしたいかをコードで伝える** (How)
 
 ---
-### 図で説明すると
+## Flutterでの描画
+
+どのウィジェットを使用する場合でもレイアウトは `build` メソッドに記述されています。
+
+Text, ListView, Slider, Container, etc...
+どのウィジェットでも`build` メソッドに記載されています。
+レイアウトを確認したいときは`build` で検索すると良いです。
+
+---
 
 <style scoped>
   .left {
@@ -244,11 +252,16 @@ FlutterのUIは全て**ウィジェット**
     width: 48%;
     flex-direction: column;
   }
+  .center{
+    display: flex;
+    width: 4px;
+    margin: 8px;
+    background-color: black
+  }
   .right {
     display: flex;
     width: 48%;
     flex-direction: column;
-    margin-left: 16px;
   }
   .container {
     display: flex;
@@ -257,21 +270,44 @@ FlutterのUIは全て**ウィジェット**
   }
 </style>
 
+## 【注意】画面の更新にはルールが存在する
+
+
+画面の更新処理は必ず `setState()` メソッドの中に記述する！！
 
 <div class="container">
-  <img class="left" src="images/declartive_vs_imperative.png" />
+  <div class="left">
 
+  ✅  OK
+
+    // :
+    Text(count)
+    // :
+
+    // ヨシ！
+    setState(() {
+      count = count + 1;
+    });
+
+  </div>
+  <div class="center">
+  </div>
   <div class="right">
-  <a href="https://twitter.com/gethackteam/status/1268892357027663873/photo/1"> https://twitter.com/gethackteam/status/1268892357027663873/photo/1</a>
 
-  左が宣言的、右が命令的
+  :x: NG
 
-  左は進む(D)の1つだけで**ギアを意識しなくて良い**
+    // :
+    Text(count)
+    // :
 
-  右は今どの**ギアにいるか意識しないといけない**
+    // これでは画面に+1された値が反映されない
+    count = count + 1;
 
   </div>
 </div>
+
+
+
 
 ---
 ## Todoアプリで使う主なウィジェット
@@ -326,14 +362,193 @@ CloneしたプロジェクトをAndroid エミュレータで動かしてみま�
 ![](images/image_1_1.png)
 
 ---
+
+## 1つのタスクUI作成
+#### TodoTileWidgetクラスの作成
+
+* `todo_tile_widget.dart` ファイルを作成し、`TodoTileWidget` クラスを作成します。
+
+```dart
+class TodoTileWidget extends StatefulWidget {
+  // :
+}
+
+
+class _TodoTileWidgetState extends State<TodoTileWidget> {
+  // :
+}
+```
+
+---
 ## 1つのタスクUI作成
 
-* `todo_tile_widget.dart` ファイルを作ってください。
-* Card > CheckboxListTile > Text の順でウィジェットを作成します。
-* Dismissible > Container は後で追加します。
+#### todo.dart, todo.g.dartファイルを配置
+
+<style scoped>
+  .left {
+    display: flex;
+    width: 60%;
+    flex-direction: column;
+  }
+  .center{
+    display: flex;
+    width: 4px;
+    margin: 8px;
+    background-color: black
+  }
+  .right {
+    display: flex;
+    width: 40%;
+    flex-direction: column;
+  }
+  .container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 16px;
+  }
+</style>
+
+
+<div class="container">
+  <div class="left">
+
+  先ほど共有しましたファイルから
+  `todo.dart`, `todo.g.dart`ファイルを
+   `lib` フォルダ直下へ配置します。
+
+  </div>
+  <div class="center">
+  </div>
+  <div class="right">
+   <img src="images/todo_tile_create_1.png" width=340 />
+
+  </div>
+</div>
+
+---
+## 1つのタスクUI作成
+
+#### Hiveプラグインのインポート
+
+`pubspec.yaml`ファイルの
+`dependencies`に下記ライブラリを記載し、保存します。
+
+```yaml
+dependencies:
+  // :
+  hive: ^2.2.3
+  uuid: ^3.0.6
+  hive_flutter: ^1.1.0
+```
+
+※ インデントがずれているとうまく読み込めないのでご注意下さい。
+
+---
+## 1つのタスクUI作成
+
+#### Hiveの開発関連のプラグインをインポート
+
+`pubspec.yaml` ファイルの
+`dev_dependencies`に下記ライブラリを記載し、保存します。
+
+```yaml
+dev_dependencies:
+  // :
+  hive_generator: ^1.1.3
+  build_runner: ^2.2.0
+```
+
+※ インデントがずれているとうまく読み込めないのでご注意下さい。
+
+---
+## 1つのタスクUI作成
+
+#### 引数にTodoクラスのオブジェクトを設定
+
+`TodoTileWidget` クラスの引数に Todoクラスの引数を追加します。
+
+```dart
+class TodoTileWidget extends StatefulWidget {
+  final Todo todo;
+  const TodoTileWidget({
+    Key? key,
+    required this.todo,
+  }) : super(key: key);
+}
+
+class _TodoTileWidgetState extends State<TodoTileWidget> {
+  // 使うときは widget.todo でアクセス可能
+}
+```
+
+---
+## 1つのタスクUI作成
+#### Tileウィジェットを作成
+* `Card` > `CheckboxListTile` > `Text` の順でウィジェットを配置
+
+```dart
+Widget build(BuildContext context) {
+  return Card(
+    child: CheckboxListTile(
+      value: /* check用の変数を設定 */
+      onChanged: (bool value) { /* チェックのON/OFF時のコールバックを設定 */ } 
+      title: Text(/* ここにタスク名を設定 */), 
+      subtitle: Text(/* ここに更新日を設定 */), 
+    )
+  );
+}
+```
+
+---
+## 1つのタスクUI作成
+#### スライドで削除できるUIを作成
+
+先ほどのCardウィジェットを`Dismissible` > `Container` で包みます。
+
+```dart
+Widget build(BuildContext context) {
+  return Dismissible(
+    child: Contaienr(
+      child: Card(
+        // :
+      )
+    )
+  );
+}
+```
+---
+## リスト形式に並べるUIを作成
+
+#### todo_page.dartファイルの作成
+
+`lib`フォルダ直下に `todo_page.dart` ファイルを作成します。
+
+`todo_page.dart`ファイル内に `TodoPage` クラスを作成します。
+
+```dart
+class TodoPage extends StatefulWidget {
+  // :
+}
+
+class _TodoPageState extends State<TodoPage> {
+  // :
+}
+```
 
 ---
 ## リスト形式に並べるUIを作成
+
+#### TodoTileWidget ウィジェットを配置
+
+先ほど作成した `TodoPage` クラスの `build` メソッドに
+`TodoTileWidget` ウィジェットを配置します。
+
+```dart
+@override
+Widget build(BuildContext context) {
+  return TodoTileWidget(todo: Todo);
+}
+```
 
 ---
 ## ウィジェット切り出し
