@@ -328,6 +328,9 @@ CloneしたプロジェクトをAndroid エミュレータで動かしてみま�
 ---
 ## 1つのタスクUI作成
 
+* `todo_tile_widget.dart` ファイルを作ってください。
+* Card > CheckboxListTile > Text の順でウィジェットを作成します。
+* Dismissible > Container は後で追加します。
 
 ---
 ## リスト形式に並べるUIを作成
