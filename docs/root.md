@@ -516,6 +516,28 @@ Widget build(BuildContext context) {
   );
 }
 ```
+
+---
+
+## 1つのタスクUI作成
+
+#### 編集と削除用コールバックを引数に追加
+
+`TodoTileWidget`クラスに編集と削除用のコールバックを追加します。
+
+```dart
+class TodoTileWidget extends StatefulWidget {
+  final Todo todo;
+  final Function()? onDismiss; // 削除用コールバック -- 追加した行
+  final Function()? onLongTap; // 編集用コールバック -- 追加した行
+  const TodoTileWidget({
+    Key? key,
+    required this.todo,
+    this.onDismiss, // 削除用コールバック -- 追加した行
+    this.onLongTap, // 編集用コールバック -- 追加した行
+  }) : super(key: key);
+```
+
 ---
 ## リスト形式に並べるUIを作成
 
