@@ -598,7 +598,22 @@ class _TodoPageState extends State<TodoPage> {
 
 ---
 ## リスト形式のUIを作成
+#### MyUtils mixinの追加
 
+`_TodoPageState` クラスに`MyUtils` mixinを適用します。
+
+```dart
+class _TodoPageState extends State<TodoPage> with MyUtils {
+  // :
+```
+
+これで、`showDeletedTodoSnackBar`, `showEditingTodoDialog`などが使えるようになります。
+※ 追加後、`my_utils.dart` ファイルインポートを忘れないように
+　してください。
+
+
+---
+## リスト形式のUIを作成
 #### TodoTileWidget ウィジェットを配置
 
 先ほど作成した `TodoPage` クラスの `build` メソッドに
@@ -607,11 +622,38 @@ class _TodoPageState extends State<TodoPage> {
 ```dart
 @override
 Widget build(BuildContext context) {
-  return TodoTileWidget(todo: Todo);
+  final todo = Todo(id: 'test', taskName: 'タスク1', isCompleted: false);
+  return TodoTileWidget(todo: todo);
 }
 ```
 
+---
+## リスト形式のUIを作成
+#### TodoTileWidgetのonDissmissとonLongTapの設定
+`TodoTileWidget`の`onDissmiss`と`onLongTap`を設定します。
 
+```dart
+return TodoTileWidget(
+  todo: todo,
+  onDismiss: () async {
+    await _todoManager.deleteTodo(todo);
+    showDeletedTodoSnackBar(context, todo, index);
+  },
+  onLongTap: () async {
+    await showEditingTodoDialog(context, todo, newItem: false);
+  },
+);
+```
+
+---
+## リスト形式のUIを作成
+#### ListViewウィジェットを追加
+
+先ほど配置した`TodoTileWidget`ウィジェットを
+`ListView`ウィジェットで包みます。
+
+```dart
+```
 
 
 ---
