@@ -18,7 +18,7 @@ class MyTodoManager {
   get taskLength => _todos.length;
 
   /// 更新通知を届けるリスナー
-  final List<MyObserver<List<MyTodo>>> _listeners = [];
+  final List<MyObserver<Iterable<MyTodo>>> _listeners = [];
 
   /// boxを操作するオブジェクト
   final _todoService = MyTodoBox.instance;
@@ -37,7 +37,7 @@ class MyTodoManager {
   }
 
   /// 更新通知を飛ばすリスナーを追加します。
-  void addListener(MyObserver<List<MyTodo>> listener) {
+  void addListener(MyObserver<Iterable<MyTodo>> listener) {
     _listeners.add(listener);
   }
 
@@ -131,6 +131,7 @@ class MyTodoManager {
   Future<Iterable<MyTodo>> getAll() async {
     final todos = await _todoService.getAll();
     todos.sorted(((a, b) => a.createdAt.compareTo(b.createdAt)));
+    _todos.clear();
     _todos.addAll(todos);
     return todos;
   }

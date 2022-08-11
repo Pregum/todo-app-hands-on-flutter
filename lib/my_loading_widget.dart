@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:todo_app/my_utils.dart';
 import 'package:todo_app/my_todo.dart';
 
+import 'my_observer.dart';
 import 'my_todo_manager.dart';
 
 typedef FetchFunc = T Function<T>();
@@ -12,30 +15,42 @@ typedef FetchFunc = T Function<T>();
 class MyLoadingTodoWidget extends StatefulWidget {
   const MyLoadingTodoWidget({
     Key? key,
-    required this.onCompletedFetching,
     required this.builder,
   }) : super(key: key);
-  final Function(List<MyTodo> todos) onCompletedFetching;
-  final Widget Function(List<MyTodo> todos) builder;
+  final Widget Function(Iterable<MyTodo> todos) builder;
 
   @override
   State<MyLoadingTodoWidget> createState() => _MyLoadingTodoWidgetState();
 }
 
 class _MyLoadingTodoWidgetState extends State<MyLoadingTodoWidget>
-    with MyUtils {
-  late final Future<List<MyTodo>> future;
+    with MyUtils
+    implements MyObserver<Iterable<MyTodo>> {
+  final sc = StreamController<Iterable<MyTodo>>();
 
   @override
   void initState() {
     super.initState();
-    future = _fetchContents();
+    MyTodoManager.instance.addListener(this);
+    initStream();
+  }
+
+  Future<void> initStream() async {
+    final todos = await MyTodoManager.instance.getAll();
+    sc.sink.add(todos);
+  }
+
+  @override
+  void dispose() {
+    MyTodoManager.instance.clearListenrs();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      builder: (BuildContext context, AsyncSnapshot<List<MyTodo>> snapshot) {
+    return StreamBuilder(
+      builder:
+          (BuildContext context, AsyncSnapshot<Iterable<MyTodo>> snapshot) {
         if (!snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -49,14 +64,20 @@ class _MyLoadingTodoWidgetState extends State<MyLoadingTodoWidget>
 
         return widget.builder(snapshot.data!);
       },
-      future: future,
+      stream: sc.stream,
     );
   }
 
-  Future<List<MyTodo>> _fetchContents() async {
-    final todos = await MyTodoManager.instance.getAll();
-    final listTodos = todos.toList();
-    widget.onCompletedFetching(listTodos);
-    return listTodos;
+  @override
+  void onReceive(Iterable<MyTodo> item) {
+    sc.sink.add(item);
+  }
+
+  @override
+  Future<void> onCreate(Iterable<MyTodo> item) async {
+    if (item.isEmpty) {
+      return;
+    }
+    await showEditingTodoDialog(context, item.first, newItem: true);
   }
 }

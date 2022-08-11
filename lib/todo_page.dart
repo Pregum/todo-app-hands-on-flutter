@@ -14,32 +14,24 @@ class TodoPage extends StatefulWidget {
   State<TodoPage> createState() => _TodoPageState();
 }
 
-class _TodoPageState extends State<TodoPage>
-    with MyUtils
-    implements MyObserver<List<MyTodo>> {
-  List<MyTodo> _editTodos = <MyTodo>[];
+class _TodoPageState extends State<TodoPage> with MyUtils {
   final _todoManager = MyTodoManager.instance;
 
   @override
   void initState() {
     super.initState();
-    _todoManager.addListener(this);
   }
 
   @override
   void dispose() {
-    _todoManager.clearListenrs();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return MyLoadingTodoWidget(
-      onCompletedFetching: (todos) {
-        setState(() => _editTodos = todos);
-      },
       builder: ((todos) {
-        return _buildListContents(_editTodos);
+        return _buildListContents(todos.toList());
       }),
     );
   }
@@ -61,18 +53,5 @@ class _TodoPageState extends State<TodoPage>
       },
       itemCount: todos.length,
     );
-  }
-
-  @override
-  void onReceive(List<MyTodo> todos) {
-    setState(() => _editTodos = todos);
-  }
-
-  @override
-  Future<void> onCreate(List<MyTodo> item) async {
-    if (item.isEmpty) {
-      return;
-    }
-    await showEditingTodoDialog(context, item.first, newItem: true);
   }
 }
