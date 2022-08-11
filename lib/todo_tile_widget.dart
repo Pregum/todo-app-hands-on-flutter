@@ -20,20 +20,7 @@ class TodoTileWidget extends StatefulWidget {
 }
 
 class _TodoTileWidgetState extends State<TodoTileWidget> {
-  final _textEditingController = TextEditingController();
   final _todoManager = TodoManager.instance;
-
-  @override
-  void initState() {
-    super.initState();
-    _textEditingController.text = widget.todo.taskName;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _textEditingController.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
