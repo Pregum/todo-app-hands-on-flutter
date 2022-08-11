@@ -689,6 +689,7 @@ Widget build(BuildContext context) {
 `main.dart`ファイルの`main`メソッド内を下記のように書き換えます。
 ```dart
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(TodoAdapter());
 
@@ -696,7 +697,42 @@ Future<void> main() async {
 }
 ```
 
+---
+## main.dartへの配置
+#### _MyHomePageStateにTodoPageを配置
 
+`_MyHomePageState` クラスの`build`メソッド内に`TodoPage`を配置します。
+```dart
+Widget build(BuildContext context) {
+  return Scaffold(
+    // :
+    body: const TodoPage(),
+    // :
+```
+
+
+---
+## main.dartへの配置
+#### _MyHomePageStateにFABの処理を設定
+
+`TodoPage`を配置したその下の`floatingActionButton.onPressd`の処理を
+書き換えます。
+
+```dart
+  // :
+  body: const TodoPage(),
+  floatingActionButton: FloatingActionButton(
+    onPressed: () async {
+      await MyTodoManager.instance.createNewTodo();
+    },
+  ),
+  // :
+```
+
+---
+## 完成 :tada: :christmas_tree: :dart: :beer:
+
+## :confetti_ball: お疲れ様でした :confetti_ball: 
 
 ---
 ## 参考サイト
@@ -707,44 +743,3 @@ Future<void> main() async {
 * https://qiita.com/Hiroyuki_OSAKI/items/f3f88ae535550e95389d
 
 * https://ui.dev/imperative-vs-declarative-programming
-
----
-* Flutterとは(2min)
-* なんで他のクラスプラットフォームではないの？:thinking:
-  * いい感じのUIが標準ライブラリで作れる
-  * レイアウトの微調整が簡単
-  * 対応プラットフォームが多い
-  * UIのソースがWeb上で共有できる(DartPad)
-* クロスプラットフォームアプリとネイティブアプリの違い(2min)
-* 今日作るアプリのデモ画面(1min)
-* ハンズオン開始
-  * 画面を作ろう
-    * 重要なウィジェット
-      * StatefulWidget
-        * MaterialApp
-        * Scaffold
-        * Container
-    * このアプリのMVPウィジェット
-      * ListView
-    * 今日使うウィジェット達一覧
-      * main.dart
-        * CircularProgressIndicator.adaptive()
-        * MaterialApp
-        * Scaffold
-        * AppBar
-        * FloatingActionButton
-        * Icon
-        * SnackBar
-        * Text
-        * StatefulWidget
-        * StatelessWidget
-      * 
-    * 画面一覧
-      * main.dart
-      * observer.dart
-      * todo.dart
-      * todo.g.dart
-      * todo_manager.dart
-      * todo_screen.dart
-      * todo_service.dart
-      * todo_tile_widget.dart
