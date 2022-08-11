@@ -5,6 +5,7 @@ import 'package:todo_app/todo_manager.dart';
 mixin MyUtils {
   final _todoManager = TodoManager.instance;
 
+  /// 削除通知をスナックバーUIで表示します。
   void showDeletedTodoSnackBar(
       BuildContext context, Todo currentTodo, int index) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -26,7 +27,7 @@ mixin MyUtils {
     );
   }
 
-  /// ダイアログを表示します。
+  /// タスク名の編集ダイアログを表示します。
   Future<void> showEditingTodoDialog(BuildContext context, Todo todo,
       {bool newItem = false}) async {
     final textController = TextEditingController(text: todo.taskName);

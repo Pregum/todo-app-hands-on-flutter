@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/my_loading_widget.dart';
 
 import 'my_observer.dart';
 import 'my_utils.dart';
@@ -34,41 +35,33 @@ class _TodoPageState extends State<TodoPage>
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      builder: (BuildContext context, AsyncSnapshot<List<Todo>> snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        return _buildListContents(_editTodos);
+    return MyLoadingTodoWidget(
+      onCompleted: (todos) {
+        setState(() => _editTodos = todos);
       },
-      future: future,
+      builder: ((todos) {
+        return _buildListContents(_editTodos);
+      }),
     );
   }
 
-  Widget _buildListContents(List<Todo>? todos) {
-    if (todos == null || todos.isEmpty) {
-      return const Center(
-        child: Text('タスクを追加しましょう！'),
-      );
-    } else {
-      return ListView.builder(
-        itemBuilder: (context, index) {
-          final currentTodo = todos[index];
-          return TodoTileWidget(
-            todo: currentTodo,
-            onDismiss: () async {
-              await _todoManager.deleteTodo(currentTodo);
-              showDeletedTodoSnackBar(context, currentTodo, index);
-            },
-            onLongTap: () async {
-              await showEditingTodoDialog(context, currentTodo, newItem: false);
-            },
-          );
-        },
-        itemCount: todos.length,
-      );
-    }
+  Widget _buildListContents(List<Todo> todos) {
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        final currentTodo = todos[index];
+        return TodoTileWidget(
+          todo: currentTodo,
+          onDismiss: () async {
+            await _todoManager.deleteTodo(currentTodo);
+            showDeletedTodoSnackBar(context, currentTodo, index);
+          },
+          onLongTap: () async {
+            await showEditingTodoDialog(context, currentTodo, newItem: false);
+          },
+        );
+      },
+      itemCount: todos.length,
+    );
   }
 
   Future<List<Todo>> _fetchContents() async {
