@@ -12,10 +12,10 @@ typedef FetchFunc = T Function<T>();
 class MyLoadingTodoWidget extends StatefulWidget {
   const MyLoadingTodoWidget({
     Key? key,
-    required this.onCompleted,
+    required this.onCompletedFetching,
     required this.builder,
   }) : super(key: key);
-  final Function(List<MyTodo> todos) onCompleted;
+  final Function(List<MyTodo> todos) onCompletedFetching;
   final Widget Function(List<MyTodo> todos) builder;
 
   @override
@@ -56,7 +56,7 @@ class _MyLoadingTodoWidgetState extends State<MyLoadingTodoWidget>
   Future<List<MyTodo>> _fetchContents() async {
     final todos = await MyTodoManager.instance.getAll();
     final listTodos = todos.toList();
-    widget.onCompleted(listTodos);
+    widget.onCompletedFetching(listTodos);
     return listTodos;
   }
 }

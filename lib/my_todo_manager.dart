@@ -29,7 +29,7 @@ class MyTodoManager {
   /// インナーコンストラクタ
   MyTodoManager._internal();
 
-  /// インナーファクトリクラス
+  /// インナーファクトリコンストラクタ
   ///
   /// [ _ins ]がnullならば、代入処理が走ります。
   factory MyTodoManager._getInstance() {
@@ -52,7 +52,7 @@ class MyTodoManager {
   Future<void> deleteTodo(MyTodo todo) async {
     _todos.removeWhere((element) => element.id == todo.id);
     await _todoService.delete(todo);
-    _notifyListeners(_todos);
+    _notifyonReceiveListeners(_todos);
   }
 
   /// idが一意であるかチェックします。
@@ -68,7 +68,7 @@ class MyTodoManager {
   ///
   /// boxへ保存する場合は[storeTodo]メソッドで保存してください。
   ///
-  /// [onCreate] メソッドで作成通知が飛びます。
+  /// 作成後、 [onCreate] 作成通知が飛びます。
   Future<void> createNewTodo() async {
     const uuid = Uuid();
     var newId = uuid.v4();
@@ -83,7 +83,7 @@ class MyTodoManager {
       createdAt: now,
       udatedAt: now,
     );
-    _notifyCreationListeners([newTodo]);
+    _notifyCreateListeners([newTodo]);
   }
 
   /// [item] と同じidを持つオブジェクトをboxの中から探して更新します。
@@ -96,7 +96,7 @@ class MyTodoManager {
     }
     target.updatedAt = DateTime.now();
     await _todoService.set(item);
-    _notifyListeners(_todos);
+    _notifyonReceiveListeners(_todos);
   }
 
   /// [index]の位置に削除された[todo]を元に戻します。
@@ -104,13 +104,13 @@ class MyTodoManager {
     var correctedIndex = index;
     if (index < 0) {
       return;
-    } else if (_todos.length <= index) {
-      correctedIndex = max(0, _todos.length - 1);
+    } else if (_todos.length < index) {
+      correctedIndex = max(0, _todos.length);
     }
 
     _todos.insert(correctedIndex, todo);
     await _todoService.set(todo);
-    _notifyListeners(_todos);
+    _notifyonReceiveListeners(_todos);
   }
 
   /// [index]の位置に[todo]を保存します。
@@ -124,7 +124,7 @@ class MyTodoManager {
     _todos.insert(index, todo);
     todo.updatedAt = DateTime.now();
     await _todoService.set(todo);
-    _notifyListeners(_todos);
+    _notifyonReceiveListeners(_todos);
   }
 
   /// boxから全てのtodoタスクを取得します。
@@ -136,14 +136,14 @@ class MyTodoManager {
   }
 
   /// リスナーに更新処理を通知します。
-  void _notifyListeners(List<MyTodo> items) {
+  void _notifyonReceiveListeners(List<MyTodo> items) {
     for (var listener in _listeners) {
       listener.onReceive(items);
     }
   }
 
   /// リスナーに作成通知を行います。
-  void _notifyCreationListeners(List<MyTodo> items) {
+  void _notifyCreateListeners(List<MyTodo> items) {
     for (var listener in _listeners) {
       listener.onCreate(items);
     }

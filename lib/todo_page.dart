@@ -35,7 +35,7 @@ class _TodoPageState extends State<TodoPage>
   @override
   Widget build(BuildContext context) {
     return MyLoadingTodoWidget(
-      onCompleted: (todos) {
+      onCompletedFetching: (todos) {
         setState(() => _editTodos = todos);
       },
       builder: ((todos) {
