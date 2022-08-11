@@ -630,13 +630,13 @@ Widget build(BuildContext context) {
 ---
 ## リスト形式のUIを作成
 #### TodoTileWidgetのonDissmissとonLongTapの設定
-`TodoTileWidget`の`onDissmiss`と`onLongTap`を設定します。
+`TodoTileWidget`の`onDissmiss`と`onLongTap`を記述します。
 
 ```dart
 return TodoTileWidget(
   todo: todo,
   onDismiss: () async {
-    await _todoManager.deleteTodo(todo);
+    await MyTodoManager.instance.deleteTodo(todo);
     showDeletedTodoSnackBar(context, todo, index);
   },
   onLongTap: () async {
@@ -649,11 +649,53 @@ return TodoTileWidget(
 ## リスト形式のUIを作成
 #### ListViewウィジェットを追加
 
-先ほど配置した`TodoTileWidget`ウィジェットを
-`ListView`ウィジェットで包みます。
+先ほど配置した`TodoTileWidget`を `ListView`ウィジェットで包みます。
 
 ```dart
+Widget build(BuildContext context) {
+  final todo = Todo(id: 'test', taskName: 'タスク1', isCompleted: false);
+  final todos = [todo];
+  return ListView.builder(
+    itemCount: todos.length,
+    itemBuilder: (context, index) {
+      final todo = todos[index];
+      return TodoTileWidget(
+        // :
 ```
+
+---
+## リスト形式のUIを作成
+#### MyLoadingTodoWidget の配置
+
+先ほど配置した`ListView`を`MyLoadingTodoWidget`で包みます。
+
+```dart
+Widget build(BuildContext context) {
+  return MyLoadingTodoWidget(
+    builder: ((todos) {
+      return ListView.builder(
+        // :
+    }),
+  );
+```
+
+`ListView`のreturnと仮で作成していたtodo, todosは削除します。
+
+---
+## main.dartへの配置
+
+#### hiveにMyTodoのアダプタクラスを登録
+
+`main.dart`ファイルの`main`メソッド内を下記のように書き換えます。
+```dart
+Future<void> main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(TodoAdapter());
+
+  runApp(const MyApp());
+}
+```
+
 
 
 ---
