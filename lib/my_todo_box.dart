@@ -1,39 +1,39 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:todo_app/todo.dart';
+import 'package:todo_app/my_todo.dart';
 
 /// boxを操作するクラスです。
-class TodoBox {
+class MyTodoBox {
   /// box名
   final _boxName = 'todos';
 
   /// シングルトン用オブジェクト
-  static TodoBox? _ins;
+  static MyTodoBox? _ins;
 
   /// シングルトン用オブジェクト
-  static TodoBox get instance => _ins ??= TodoBox._getInstance();
+  static MyTodoBox get instance => _ins ??= MyTodoBox._getInstance();
 
   /// インナーコンストラクタ
-  TodoBox._internal();
+  MyTodoBox._internal();
   // ファクトリコンストラクタ
-  factory TodoBox._getInstance() {
-    return _ins ??= TodoBox._internal();
+  factory MyTodoBox._getInstance() {
+    return _ins ??= MyTodoBox._internal();
   }
 
   /// boxから全てのタスクを取得します。
-  Future<Iterable<Todo>> getAll() async {
+  Future<Iterable<MyTodo>> getAll() async {
     final box = await _openBoxIfClosed();
     return box.values;
   }
 
   /// [value] をboxへ追加します。
-  Future<int> add(Todo value) async {
+  Future<int> add(MyTodo value) async {
     final box = await _openBoxIfClosed();
     final id = await box.add(value);
     return id;
   }
 
   /// [value] をboxから削除します。
-  Future<void> delete(Todo value) async {
+  Future<void> delete(MyTodo value) async {
     final box = await _openBoxIfClosed();
     await box.delete(value.id);
   }
@@ -41,7 +41,7 @@ class TodoBox {
   /// [value] をboxにsetします。
   ///
   /// 既に存在する場合は上書きします。
-  Future<Todo> set(Todo value) async {
+  Future<MyTodo> set(MyTodo value) async {
     final box = await _openBoxIfClosed();
     await box.put(value.id, value);
     return value;
@@ -55,10 +55,11 @@ class TodoBox {
   }
 
   /// boxアクセス用オブジェクトを取得します。
-  Future<Box<Todo>> _openBoxIfClosed() async {
+  Future<Box<MyTodo>> _openBoxIfClosed() async {
     final isOpen = Hive.isBoxOpen(_boxName);
-    final box =
-        isOpen ? Hive.box<Todo>(_boxName) : await Hive.openBox<Todo>(_boxName);
+    final box = isOpen
+        ? Hive.box<MyTodo>(_boxName)
+        : await Hive.openBox<MyTodo>(_boxName);
     return box;
   }
 }

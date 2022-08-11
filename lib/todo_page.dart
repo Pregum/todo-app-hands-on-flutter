@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/my_loading_widget.dart';
 
 import 'my_observer.dart';
+import 'my_utils.dart';
 import 'todo_tile_widget.dart';
-import 'todo.dart';
-import 'todo_manager.dart';
+import 'my_todo.dart';
+import 'my_todo_manager.dart';
 
 class TodoPage extends StatefulWidget {
   const TodoPage({Key? key}) : super(key: key);
@@ -12,10 +14,11 @@ class TodoPage extends StatefulWidget {
   State<TodoPage> createState() => _TodoPageState();
 }
 
-class _TodoPageState extends State<TodoPage> implements MyObserver<List<Todo>> {
-  List<Todo> _editTodos = <Todo>[];
-  late final future = _fetchContents();
-  final _todoManager = TodoManager.instance;
+class _TodoPageState extends State<TodoPage>
+    with MyUtils
+    implements MyObserver<List<MyTodo>> {
+  List<MyTodo> _editTodos = <MyTodo>[];
+  final _todoManager = MyTodoManager.instance;
 
   @override
   void initState() {
@@ -31,131 +34,45 @@ class _TodoPageState extends State<TodoPage> implements MyObserver<List<Todo>> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      builder: (BuildContext context, AsyncSnapshot<List<Todo>> snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        return _buildListContents(_editTodos);
+    return MyLoadingTodoWidget(
+      onCompletedFetching: (todos) {
+        setState(() => _editTodos = todos);
       },
-      future: future,
+      builder: ((todos) {
+        return _buildListContents(_editTodos);
+      }),
     );
   }
 
-  Widget _buildListContents(List<Todo>? todos) {
-    if (todos == null || todos.isEmpty) {
-      return const Center(
-        child: Text('タスクを追加しましょう！'),
-      );
-    } else {
-      return ListView.builder(
-        itemBuilder: (context, index) {
-          final currentTodo = todos[index];
-          return TodoTileWidget(
-            todo: currentTodo,
-            onDismiss: () async {
-              await _todoManager.deleteTodo(currentTodo);
-              _showSnackbar(context, currentTodo, index);
-            },
-            onLongTap: () async {
-              await _showTaskDialog(currentTodo, newItem: false);
-            },
-          );
-        },
-        itemCount: todos.length,
-      );
-    }
-  }
-
-  void _showSnackbar(BuildContext context, Todo currentTodo, int index) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${currentTodo.taskName}は削除されました。'),
-        duration: const Duration(milliseconds: 1500),
-        action: SnackBarAction(
-          label: '元へ戻す',
-          onPressed: () async {
-            await _todoManager.restoreTodo(index, currentTodo);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('元へ戻しました。'),
-              ),
-            );
+  Widget _buildListContents(List<MyTodo> todos) {
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        final currentTodo = todos[index];
+        return TodoTileWidget(
+          todo: currentTodo,
+          onDismiss: () async {
+            await _todoManager.deleteTodo(currentTodo);
+            showDeletedTodoSnackBar(context, currentTodo, index);
           },
-        ),
-      ),
-    );
-  }
-
-  /// ダイアログを表示します。
-  Future<void> _showTaskDialog(Todo todo, {bool newItem = false}) async {
-    final textController = TextEditingController(text: todo.taskName);
-    return showDialog(
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('タスク名の編集'),
-          content: TextField(
-            autofocus: true,
-            controller: textController,
-            decoration: const InputDecoration(
-              hintText: 'タスク名を入力',
-            ),
-            onSubmitted: (value) async {
-              if (value.isEmpty) {
-                return;
-              }
-              Navigator.of(context).pop();
-              todo.taskName = textController.text;
-              if (newItem) {
-                await _todoManager.storeTodo(_todoManager.taskLength, todo);
-              } else {
-                await _todoManager.updateTodo(todo);
-              }
-            },
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () async {
-                Navigator.of(context).pop();
-                todo.taskName = textController.text;
-                if (newItem) {
-                  await _todoManager.storeTodo(_todoManager.taskLength, todo);
-                } else {
-                  await _todoManager.updateTodo(todo);
-                }
-              },
-              child: const Text('OK'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
+          onLongTap: () async {
+            await showEditingTodoDialog(context, currentTodo, newItem: false);
+          },
         );
       },
-      context: context,
+      itemCount: todos.length,
     );
-  }
-
-  Future<List<Todo>> _fetchContents() async {
-    final todos = await TodoManager.instance.getAll();
-    setState(() => _editTodos = todos.toList());
-    return _editTodos;
   }
 
   @override
-  void onReceive(List<Todo> todos) {
+  void onReceive(List<MyTodo> todos) {
     setState(() => _editTodos = todos);
   }
 
   @override
-  Future<void> onCreate(List<Todo> item) async {
+  Future<void> onCreate(List<MyTodo> item) async {
     if (item.isEmpty) {
       return;
     }
-    await _showTaskDialog(item.first, newItem: true);
+    await showEditingTodoDialog(context, item.first, newItem: true);
   }
 }
