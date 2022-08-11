@@ -16,6 +16,7 @@ class MyTodo {
   String taskName;
 
   /// タスクの完了フラグ
+  /// 完了なら[true], 未完了なら [false] が入ります。
   @HiveField(3)
   bool isCompleted;
 
@@ -45,6 +46,9 @@ class MyTodo {
 
 /// [MyTodo] クラスの拡張メソッド
 extension TodoEx on MyTodo {
+  /// 更新日を `[yyyy-MM-dd HH:mm]` フォーマットで取得します。
+  ///
+  /// e.g.) 2022-08-11 14:17
   String get prettyUpdateAt {
     DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
     return formatter.format(updatedAt);
