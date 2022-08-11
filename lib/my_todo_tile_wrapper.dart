@@ -14,6 +14,12 @@ class MyTodoTileWrapper extends StatelessWidget {
 
   /// 長押し時に呼び出されるコールバック
   final Function()? onLongTap;
+
+  /// TodoTileにスライド・長押し操作を追加するWidget
+  ///
+  /// スライド時に [onDismiss] が呼び出されます。
+  ///
+  /// タイル長押し時に [onLongTap] が呼び出されます。
   const MyTodoTileWrapper({
     Key? key,
     required this.child,
