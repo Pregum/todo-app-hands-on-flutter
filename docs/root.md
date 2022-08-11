@@ -466,7 +466,7 @@ dev_dependencies:
 
 #### 引数にTodoクラスのオブジェクトを設定
 
-`TodoTileWidget` クラスの引数に Todoクラスの引数を追加します。
+`TodoTileWidget` クラスの引数に `Todo` クラスの引数を追加します。
 
 ```dart
 class TodoTileWidget extends StatefulWidget {
@@ -483,6 +483,7 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
 ---
 ## 1つのタスクUI作成
 #### Tileウィジェットを作成
+`TodoTileWidget`の`build`メソッドに
 `Card` > `CheckboxListTile` > `Text` の順でウィジェットを配置
 
 ```dart
@@ -508,9 +509,10 @@ Widget build(BuildContext context) {
 ```dart
 child: CheckboxListTile(
   // :
-  onChanged: (bool? newValue) {
+  onChanged: (bool? newValue) async {
     if (newValue == null) { return; }
     widget.todo.isCompleted = newValue; // これだけだと画面に反映されない (・x・)
+    await MyTodoManager.instance.updateTodo(widget.todo);
   }
   // :
 )
@@ -520,24 +522,25 @@ child: CheckboxListTile(
 
 ---
 ## 1つのタスクUI作成
-#### スライドで削除できるUIを作成
+#### 完了時に取り消し線をつける処理を追加
 
-先ほどのCardウィジェットを`Dismissible` > `Container` で包みます。
+`CheckboxListTile`の`title`ウィジェット
+に取り消し線の処理を追加します。
+
 
 ```dart
-Widget build(BuildContext context) {
-  return Dismissible(
-    child: Contaienr(
-      child: Card(
-        // :
-      )
-    )
-  );
-}
+child: CheckboxListTile(
+  // :
+  title: Text( widget.doto.taskName, 
+    style: widget.todo.isCompleted
+      ? const TextStyle(decoration: TextDecoration.lineThrough) // 完了時は取り消し線有り
+      : null, // 未完了時は取り消し線無し
+  ),
+  // :
+)
 ```
 
 ---
-
 ## 1つのタスクUI作成
 
 #### 編集と削除用コールバックを引数に追加
@@ -555,6 +558,23 @@ class TodoTileWidget extends StatefulWidget {
     this.onDismiss, // 削除用コールバック -- 追加した行
     this.onLongTap, // 編集用コールバック -- 追加した行
   }) : super(key: key);
+```
+
+---
+## 1つのタスクUI作成
+#### 編集と削除用コールバックを引数に追加
+
+`TodoTileWidget`の`build`メソッドに配置した`Card`ウィジェットを
+`MyTodoTileWrapper`ウィジェットで包みます。
+
+```dart
+  Widget build(BuildContext context) {
+    return MyTodoTileWrapper(
+      todo: widget.todo,
+      onDismiss: () { widget.onDismiss?.call(); },
+      onLongTap: () { widget.onLongTap?.call(); },
+      child: Card(
+        // :
 ```
 
 ---
