@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'my_todo_tile_wrapper.dart';
 import 'todo.dart';
 import 'todo_manager.dart';
 
@@ -36,21 +37,14 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      key: Key(widget.todo.id),
-      direction: DismissDirection.startToEnd,
-      onDismissed: (direction) {
+    return MyTodoTileWrapper(
+      todo: widget.todo,
+      onDismiss: () {
         widget.onDismiss?.call();
       },
-      background: Container(
-        alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.only(left: 8.0),
-        color: Colors.red[500],
-        child: const Icon(
-          Icons.delete,
-          color: Colors.black,
-        ),
-      ),
+      onLongTap: () {
+        widget.onLongTap?.call();
+      },
       child: Card(
         child: CheckboxListTile(
           value: widget.todo.isCompleted,
