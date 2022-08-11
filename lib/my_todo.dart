@@ -1,12 +1,12 @@
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
-part 'todo.g.dart';
+part 'my_todo.g.dart';
 
 @HiveType(typeId: 1)
 
 /// todo
-class Todo {
+class MyTodo {
   /// id
   @HiveField(1)
   String id;
@@ -16,6 +16,7 @@ class Todo {
   String taskName;
 
   /// タスクの完了フラグ
+  /// 完了なら[true], 未完了なら [false] が入ります。
   @HiveField(3)
   bool isCompleted;
 
@@ -28,7 +29,7 @@ class Todo {
   DateTime updatedAt;
 
   /// ctor
-  Todo({
+  MyTodo({
     required this.id,
     required this.taskName,
     required this.isCompleted,
@@ -43,8 +44,11 @@ class Todo {
   }
 }
 
-/// [Todo] クラスの拡張メソッド
-extension TodoEx on Todo {
+/// [MyTodo] クラスの拡張メソッド
+extension TodoEx on MyTodo {
+  /// 更新日を `[yyyy-MM-dd HH:mm]` フォーマットで取得します。
+  ///
+  /// e.g.) 2022-08-11 14:17
   String get prettyUpdateAt {
     DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
     return formatter.format(updatedAt);

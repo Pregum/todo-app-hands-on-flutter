@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'todo.dart';
-import 'todo_manager.dart';
+import 'my_todo_tile_wrapper.dart';
+import 'my_todo.dart';
+import 'my_todo_manager.dart';
 
 class TodoTileWidget extends StatefulWidget {
-  final Todo todo;
+  final MyTodo todo;
   final Function()? onDismiss;
   final Function()? onLongTap;
   const TodoTileWidget({
@@ -19,55 +20,32 @@ class TodoTileWidget extends StatefulWidget {
 }
 
 class _TodoTileWidgetState extends State<TodoTileWidget> {
-  final _textEditingController = TextEditingController();
-  final _todoManager = TodoManager.instance;
-
-  @override
-  void initState() {
-    super.initState();
-    _textEditingController.text = widget.todo.taskName;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _textEditingController.dispose();
-  }
+  final _todoManager = MyTodoManager.instance;
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      key: Key(widget.todo.id),
-      direction: DismissDirection.startToEnd,
-      onDismissed: (direction) {
+    return MyTodoTileWrapper(
+      todo: widget.todo,
+      onDismiss: () {
         widget.onDismiss?.call();
       },
-      background: Container(
-        alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.only(left: 8.0),
-        color: Colors.red[500],
-        child: const Icon(
-          Icons.delete,
-          color: Colors.black,
-        ),
-      ),
+      onLongTap: () {
+        widget.onLongTap?.call();
+      },
       child: Card(
         child: CheckboxListTile(
           value: widget.todo.isCompleted,
-          onChanged: (bool? value) async {
-            if (value == null) {
+          onChanged: (bool? newValue) async {
+            if (newValue == null) {
               return;
             }
-            widget.todo.isCompleted = value;
+            widget.todo.isCompleted = newValue;
             await _todoManager.updateTodo(widget.todo);
           },
           title: Text(
             widget.todo.taskName,
             style: widget.todo.isCompleted
-                ? const TextStyle(
-                    decoration: TextDecoration.lineThrough,
-                    decorationStyle: TextDecorationStyle.double,
-                  )
+                ? const TextStyle(decoration: TextDecoration.lineThrough)
                 : null,
           ),
           subtitle: Text('更新日: ${widget.todo.prettyUpdateAt}'),

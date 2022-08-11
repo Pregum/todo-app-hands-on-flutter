@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:todo_app/todo.dart';
-import 'package:todo_app/todo_manager.dart';
+import 'package:todo_app/my_todo.dart';
+import 'package:todo_app/my_todo_manager.dart';
 
 import 'todo_page.dart';
 
@@ -74,6 +74,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _createNewContent() async {
-    await TodoManager.instance.createNewTodo();
+    await MyTodoManager.instance.createNewTodo();
   }
 }
