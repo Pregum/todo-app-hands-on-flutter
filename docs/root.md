@@ -380,51 +380,6 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
 }
 ```
 
----
-## 1つのタスクUI作成
-
-#### todo.dart, todo.g.dartファイルを配置
-
-<style scoped>
-  .left {
-    display: flex;
-    width: 60%;
-    flex-direction: column;
-  }
-  .center{
-    display: flex;
-    width: 4px;
-    margin: 8px;
-    background-color: black
-  }
-  .right {
-    display: flex;
-    width: 40%;
-    flex-direction: column;
-  }
-  .container {
-    display: flex;
-    flex-direction: row;
-    margin-top: 16px;
-  }
-</style>
-
-
-<div class="container">
-  <div class="left">
-
-  先ほど共有しましたファイルから
-  `todo.dart`, `todo.g.dart`ファイルを
-   `lib` フォルダ直下へ配置します。
-
-  </div>
-  <div class="center">
-  </div>
-  <div class="right">
-   <img src="images/todo_tile_create_1.png" width=340 />
-
-  </div>
-</div>
 
 ---
 ## 1つのタスクUI作成
@@ -460,6 +415,51 @@ dev_dependencies:
 ```
 
 ※ インデントがずれているとうまく読み込めないのでご注意下さい。
+
+---
+## 1つのタスクUI作成
+
+#### ファイルを配置
+
+<style scoped>
+  .left {
+    display: flex;
+    width: 60%;
+    flex-direction: column;
+  }
+  .center{
+    display: flex;
+    width: 4px;
+    margin: 8px;
+    background-color: black
+  }
+  .right {
+    display: flex;
+    width: 40%;
+    flex-direction: column;
+  }
+  .container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 16px;
+  }
+</style>
+
+
+<div class="container">
+  <div class="left">
+
+  共有しましたフォルダ内のファイルを
+  `lib` フォルダ直下へ配置します。
+
+  </div>
+  <div class="center">
+  </div>
+  <div class="right">
+   <img src="images/todo_tile_create_1.png" width=340 />
+
+  </div>
+</div>
 
 ---
 ## 1つのタスクUI作成
