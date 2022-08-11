@@ -54,20 +54,17 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
       child: Card(
         child: CheckboxListTile(
           value: widget.todo.isCompleted,
-          onChanged: (bool? value) async {
-            if (value == null) {
+          onChanged: (bool? newValue) async {
+            if (newValue == null) {
               return;
             }
-            widget.todo.isCompleted = value;
+            widget.todo.isCompleted = newValue;
             await _todoManager.updateTodo(widget.todo);
           },
           title: Text(
             widget.todo.taskName,
             style: widget.todo.isCompleted
-                ? const TextStyle(
-                    decoration: TextDecoration.lineThrough,
-                    decorationStyle: TextDecorationStyle.double,
-                  )
+                ? const TextStyle(decoration: TextDecoration.lineThrough)
                 : null,
           ),
           subtitle: Text('更新日: ${widget.todo.prettyUpdateAt}'),
