@@ -4,8 +4,8 @@ import 'package:todo_app/my_loading_widget.dart';
 import 'my_observer.dart';
 import 'my_utils.dart';
 import 'todo_tile_widget.dart';
-import 'todo.dart';
-import 'todo_manager.dart';
+import 'my_todo.dart';
+import 'my_todo_manager.dart';
 
 class TodoPage extends StatefulWidget {
   const TodoPage({Key? key}) : super(key: key);
@@ -16,10 +16,9 @@ class TodoPage extends StatefulWidget {
 
 class _TodoPageState extends State<TodoPage>
     with MyUtils
-    implements MyObserver<List<Todo>> {
-  List<Todo> _editTodos = <Todo>[];
-  late final future = _fetchContents();
-  final _todoManager = TodoManager.instance;
+    implements MyObserver<List<MyTodo>> {
+  List<MyTodo> _editTodos = <MyTodo>[];
+  final _todoManager = MyTodoManager.instance;
 
   @override
   void initState() {
@@ -45,7 +44,7 @@ class _TodoPageState extends State<TodoPage>
     );
   }
 
-  Widget _buildListContents(List<Todo> todos) {
+  Widget _buildListContents(List<MyTodo> todos) {
     return ListView.builder(
       itemBuilder: (context, index) {
         final currentTodo = todos[index];
@@ -64,19 +63,13 @@ class _TodoPageState extends State<TodoPage>
     );
   }
 
-  Future<List<Todo>> _fetchContents() async {
-    final todos = await TodoManager.instance.getAll();
-    setState(() => _editTodos = todos.toList());
-    return _editTodos;
-  }
-
   @override
-  void onReceive(List<Todo> todos) {
+  void onReceive(List<MyTodo> todos) {
     setState(() => _editTodos = todos);
   }
 
   @override
-  Future<void> onCreate(List<Todo> item) async {
+  Future<void> onCreate(List<MyTodo> item) async {
     if (item.isEmpty) {
       return;
     }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/todo.dart';
+import 'package:todo_app/my_todo.dart';
 
 /// TodoTileにスライド・長押し操作を追加するWidget
 ///
@@ -7,7 +7,7 @@ import 'package:todo_app/todo.dart';
 /// タイル長押し時に [onLongTap] が呼び出されます。
 class MyTodoTileWrapper extends StatelessWidget {
   final Widget child;
-  final Todo todo;
+  final MyTodo todo;
 
   /// スライド時に呼び出されるコールバック
   final Function()? onDismiss;

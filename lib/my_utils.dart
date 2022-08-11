@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/todo.dart';
-import 'package:todo_app/todo_manager.dart';
+import 'package:todo_app/my_todo.dart';
+import 'package:todo_app/my_todo_manager.dart';
 
 mixin MyUtils {
-  final _todoManager = TodoManager.instance;
+  final _todoManager = MyTodoManager.instance;
 
   /// 削除通知をスナックバーUIで表示します。
   void showDeletedTodoSnackBar(
-      BuildContext context, Todo currentTodo, int index) {
+      BuildContext context, MyTodo currentTodo, int index) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('${currentTodo.taskName}は削除されました。'),
@@ -28,7 +28,7 @@ mixin MyUtils {
   }
 
   /// タスク名の編集ダイアログを表示します。
-  Future<void> showEditingTodoDialog(BuildContext context, Todo todo,
+  Future<void> showEditingTodoDialog(BuildContext context, MyTodo todo,
       {bool newItem = false}) async {
     final textController = TextEditingController(text: todo.taskName);
     return showDialog(

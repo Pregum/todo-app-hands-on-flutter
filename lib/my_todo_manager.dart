@@ -1,43 +1,43 @@
 import 'dart:math';
 
-import 'package:todo_app/todo_box.dart';
+import 'package:todo_app/my_todo_box.dart';
 import 'package:uuid/uuid.dart';
 import 'package:collection/collection.dart';
 
 import 'my_observer.dart';
-import 'todo.dart';
+import 'my_todo.dart';
 
 /// todoタスクを管理するクラス
-class TodoManager {
-  static TodoManager? _ins;
+class MyTodoManager {
+  static MyTodoManager? _ins;
 
   /// 内部で保持しているtodoリスト
-  final List<Todo> _todos = [];
+  final List<MyTodo> _todos = [];
 
   /// todoリストの個数を返すプロパティ
   get taskLength => _todos.length;
 
   /// 更新通知を届けるリスナー
-  final List<MyObserver<List<Todo>>> _listeners = [];
+  final List<MyObserver<List<MyTodo>>> _listeners = [];
 
   /// boxを操作するオブジェクト
-  final _todoService = TodoBox.instance;
+  final _todoService = MyTodoBox.instance;
 
   /// 外部からこのクラスを呼ぶ際に使用する静的プロパティ
-  static TodoManager get instance => _ins ?? TodoManager._getInstance();
+  static MyTodoManager get instance => _ins ?? MyTodoManager._getInstance();
 
   /// インナーコンストラクタ
-  TodoManager._internal();
+  MyTodoManager._internal();
 
   /// インナーファクトリクラス
   ///
   /// [ _ins ]がnullならば、代入処理が走ります。
-  factory TodoManager._getInstance() {
-    return _ins ??= TodoManager._internal();
+  factory MyTodoManager._getInstance() {
+    return _ins ??= MyTodoManager._internal();
   }
 
   /// 更新通知を飛ばすリスナーを追加します。
-  void addListener(MyObserver<List<Todo>> listener) {
+  void addListener(MyObserver<List<MyTodo>> listener) {
     _listeners.add(listener);
   }
 
@@ -49,7 +49,7 @@ class TodoManager {
   /// [ todo ] をboxから削除します。
   ///
   /// 削除したら削除後のリストを通知します。
-  Future<void> deleteTodo(Todo todo) async {
+  Future<void> deleteTodo(MyTodo todo) async {
     _todos.removeWhere((element) => element.id == todo.id);
     await _todoService.delete(todo);
     _notifyListeners(_todos);
@@ -76,7 +76,7 @@ class TodoManager {
       newId = uuid.v4();
     }
     final now = DateTime.now();
-    final newTodo = Todo(
+    final newTodo = MyTodo(
       isCompleted: false,
       taskName: 'new todo',
       id: newId,
@@ -89,7 +89,7 @@ class TodoManager {
   /// [item] と同じidを持つオブジェクトをboxの中から探して更新します。
   ///
   /// 一致するオブジェクトがない場合、更新処理は実行されません。
-  Future<void> updateTodo(Todo item) async {
+  Future<void> updateTodo(MyTodo item) async {
     final target = _todos.firstWhereOrNull((todo) => todo.id == item.id);
     if (target == null) {
       return;
@@ -100,7 +100,7 @@ class TodoManager {
   }
 
   /// [index]の位置に削除された[todo]を元に戻します。
-  Future<void> restoreTodo(int index, Todo todo) async {
+  Future<void> restoreTodo(int index, MyTodo todo) async {
     var correctedIndex = index;
     if (index < 0) {
       return;
@@ -116,7 +116,7 @@ class TodoManager {
   /// [index]の位置に[todo]を保存します。
   ///
   /// [restoreTodo]とのユースケースの違いは新規作成時か元に戻す処理かです。
-  Future<void> storeTodo(int index, Todo todo) async {
+  Future<void> storeTodo(int index, MyTodo todo) async {
     if (index < 0 || _todos.length < index) {
       return;
     }
@@ -128,7 +128,7 @@ class TodoManager {
   }
 
   /// boxから全てのtodoタスクを取得します。
-  Future<Iterable<Todo>> getAll() async {
+  Future<Iterable<MyTodo>> getAll() async {
     final todos = await _todoService.getAll();
     todos.sorted(((a, b) => a.createdAt.compareTo(b.createdAt)));
     _todos.addAll(todos);
@@ -136,14 +136,14 @@ class TodoManager {
   }
 
   /// リスナーに更新処理を通知します。
-  void _notifyListeners(List<Todo> items) {
+  void _notifyListeners(List<MyTodo> items) {
     for (var listener in _listeners) {
       listener.onReceive(items);
     }
   }
 
   /// リスナーに作成通知を行います。
-  void _notifyCreationListeners(List<Todo> items) {
+  void _notifyCreationListeners(List<MyTodo> items) {
     for (var listener in _listeners) {
       listener.onCreate(items);
     }

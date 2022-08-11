@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/my_utils.dart';
-import 'package:todo_app/todo.dart';
+import 'package:todo_app/my_todo.dart';
 
-import 'todo_manager.dart';
+import 'my_todo_manager.dart';
 
 typedef FetchFunc = T Function<T>();
 
@@ -15,8 +15,8 @@ class MyLoadingTodoWidget extends StatefulWidget {
     required this.onCompleted,
     required this.builder,
   }) : super(key: key);
-  final Function(List<Todo> todos) onCompleted;
-  final Widget Function(List<Todo> todos) builder;
+  final Function(List<MyTodo> todos) onCompleted;
+  final Widget Function(List<MyTodo> todos) builder;
 
   @override
   State<MyLoadingTodoWidget> createState() => _MyLoadingTodoWidgetState();
@@ -24,7 +24,7 @@ class MyLoadingTodoWidget extends StatefulWidget {
 
 class _MyLoadingTodoWidgetState extends State<MyLoadingTodoWidget>
     with MyUtils {
-  late final Future<List<Todo>> future;
+  late final Future<List<MyTodo>> future;
 
   @override
   void initState() {
@@ -35,7 +35,7 @@ class _MyLoadingTodoWidgetState extends State<MyLoadingTodoWidget>
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      builder: (BuildContext context, AsyncSnapshot<List<Todo>> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<List<MyTodo>> snapshot) {
         if (!snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -53,8 +53,8 @@ class _MyLoadingTodoWidgetState extends State<MyLoadingTodoWidget>
     );
   }
 
-  Future<List<Todo>> _fetchContents() async {
-    final todos = await TodoManager.instance.getAll();
+  Future<List<MyTodo>> _fetchContents() async {
+    final todos = await MyTodoManager.instance.getAll();
     final listTodos = todos.toList();
     widget.onCompleted(listTodos);
     return listTodos;

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'my_todo_tile_wrapper.dart';
-import 'todo.dart';
-import 'todo_manager.dart';
+import 'my_todo.dart';
+import 'my_todo_manager.dart';
 
 class TodoTileWidget extends StatefulWidget {
-  final Todo todo;
+  final MyTodo todo;
   final Function()? onDismiss;
   final Function()? onLongTap;
   const TodoTileWidget({
@@ -20,7 +20,7 @@ class TodoTileWidget extends StatefulWidget {
 }
 
 class _TodoTileWidgetState extends State<TodoTileWidget> {
-  final _todoManager = TodoManager.instance;
+  final _todoManager = MyTodoManager.instance;
 
   @override
   Widget build(BuildContext context) {
