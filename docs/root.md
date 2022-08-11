@@ -273,7 +273,7 @@ Text, ListView, Slider, Container, etc...
 ## 【注意】画面の更新にはルールが存在する
 
 
-画面の更新処理は必ず `setState()` メソッドの中に記述する！！
+画面の更新処理は必ず `setState()` メソッドの中に記述すること
 
 <div class="container">
   <div class="left">
@@ -483,20 +483,40 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
 ---
 ## 1つのタスクUI作成
 #### Tileウィジェットを作成
-* `Card` > `CheckboxListTile` > `Text` の順でウィジェットを配置
+`Card` > `CheckboxListTile` > `Text` の順でウィジェットを配置
 
 ```dart
 Widget build(BuildContext context) {
   return Card(
     child: CheckboxListTile(
-      value: /* check用の変数を設定 */
-      onChanged: (bool? value) { /* チェックのON/OFF時のコールバックを設定 */ } 
-      title: Text(/* ここにタスク名を設定 */), 
-      subtitle: Text(/* ここに更新日を設定 */), 
+      value: widget.todo.isCompleted, // check用の変数を設定
+      onChanged: (bool? value) { }, // チェックのON/OFF時のコールバックを設定 
+      title: Text( widget.doto.taskName ), // タスク名を設定
+      subtitle: Text( '更新日: ${ widget.todo.updatedAt }' ), // 更新日を設定
     )
   );
 }
 ```
+
+---
+## 1つのタスクUI作成
+#### 未チェック/チェック済 変数の設定
+
+先ほどの`CheckboxListTile`の `onChanged` プロパティに
+未チェック/チェック済の切り替え時に実行される処理を記述します。 
+
+```dart
+child: CheckboxListTile(
+  // :
+  onChanged: (bool? newValue) {
+    if (newValue == null) { return; }
+    widget.todo.isCompleted = newValue; // これだけだと画面に反映されない (・x・)
+  }
+  // :
+)
+```
+
+
 
 ---
 ## 1つのタスクUI作成
