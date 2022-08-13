@@ -26,18 +26,18 @@ class MyLoadingTodoWidget extends StatefulWidget {
 class _MyLoadingTodoWidgetState extends State<MyLoadingTodoWidget>
     with MyUtils
     implements MyObserver<Iterable<MyTodo>> {
-  final sc = StreamController<Iterable<MyTodo>>();
+  final _sc = StreamController<Iterable<MyTodo>>();
 
   @override
   void initState() {
     super.initState();
     MyTodoManager.instance.addListener(this);
-    initStream();
+    _initStream();
   }
 
-  Future<void> initStream() async {
+  Future<void> _initStream() async {
     final todos = await MyTodoManager.instance.getAll();
-    sc.sink.add(todos);
+    _sc.sink.add(todos);
   }
 
   @override
@@ -52,7 +52,7 @@ class _MyLoadingTodoWidgetState extends State<MyLoadingTodoWidget>
       builder:
           (BuildContext context, AsyncSnapshot<Iterable<MyTodo>> snapshot) {
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator.adaptive());
         }
 
         final todos = snapshot.data;
@@ -64,13 +64,13 @@ class _MyLoadingTodoWidgetState extends State<MyLoadingTodoWidget>
 
         return widget.builder(snapshot.data!);
       },
-      stream: sc.stream,
+      stream: _sc.stream,
     );
   }
 
   @override
   void onReceive(Iterable<MyTodo> item) {
-    sc.sink.add(item);
+    _sc.sink.add(item);
   }
 
   @override
