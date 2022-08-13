@@ -392,9 +392,10 @@ class _TodoTileWidgetState extends State<TodoTileWidget> {
 ```yaml
 dependencies:
   // :
-  hive: ^2.2.3
-  uuid: ^3.0.6
-  hive_flutter: ^1.1.0
+  hive: 2.2.3
+  uuid: 3.0.6
+  intl: 0.17.0
+  hive_flutter: 1.1.0
 ```
 
 ※ インデントがずれているとうまく読み込めないのでご注意下さい。
@@ -410,8 +411,8 @@ dependencies:
 ```yaml
 dev_dependencies:
   // :
-  hive_generator: ^1.1.3
-  build_runner: ^2.2.0
+  hive_generator: 1.1.3
+  build_runner: 2.2.0
 ```
 
 ※ インデントがずれているとうまく読み込めないのでご注意下さい。
@@ -466,11 +467,11 @@ dev_dependencies:
 
 #### 引数にTodoクラスのオブジェクトを設定
 
-`TodoTileWidget` クラスの引数に `Todo` クラスの引数を追加します。
+`TodoTileWidget` クラスの引数に `MyTodo` クラスの引数を追加します。
 
 ```dart
 class TodoTileWidget extends StatefulWidget {
-  final Todo todo;
+  final MyTodo todo;
   const TodoTileWidget({ Key? key, required this.todo, })
    : super(key: key);
 }
@@ -491,9 +492,9 @@ Widget build(BuildContext context) {
   return Card(
     child: CheckboxListTile(
       value: widget.todo.isCompleted, // check用の変数を設定
-      onChanged: (bool? value) { }, // チェックのON/OFF時のコールバックを設定 
+      onChanged: (bool? newValue) { }, // チェックのON/OFF時のコールバックを設定 
       title: Text( widget.doto.taskName ), // タスク名を設定
-      subtitle: Text( '更新日: ${ widget.todo.updatedAt }' ), // 更新日を設定
+      subtitle: Text('更新日: ${ widget.todo.updatedAt }'), // 更新日を設定
     )
   );
 }
@@ -524,7 +525,7 @@ child: CheckboxListTile(
 ## 1つのタスクUI作成
 #### 完了時に取り消し線をつける処理を追加
 
-`CheckboxListTile`の`title`ウィジェット
+`CheckboxListTile`の`title`プロパティ
 に取り消し線の処理を追加します。
 
 
@@ -549,7 +550,7 @@ child: CheckboxListTile(
 
 ```dart
 class TodoTileWidget extends StatefulWidget {
-  final Todo todo;
+  final MyTodo todo;
   final Function()? onDismiss; // 削除用コールバック -- 追加した行
   final Function()? onLongTap; // 編集用コールバック -- 追加した行
   const TodoTileWidget({
@@ -622,7 +623,7 @@ class _TodoPageState extends State<TodoPage> with MyUtils {
 ```dart
 @override
 Widget build(BuildContext context) {
-  final todo = Todo(id: 'test', taskName: 'タスク1', isCompleted: false);
+  final todo = MyTodo(id: 'test', taskName: 'タスク1', isCompleted: false);
   return TodoTileWidget(todo: todo);
 }
 ```
@@ -653,7 +654,7 @@ return TodoTileWidget(
 
 ```dart
 Widget build(BuildContext context) {
-  final todo = Todo(id: 'test', taskName: 'タスク1', isCompleted: false);
+  final todo = MyTodo(id: 'test', taskName: 'タスク1', isCompleted: false);
   final todos = [todo];
   return ListView.builder(
     itemCount: todos.length,
