@@ -11,19 +11,36 @@ size: 16:9
 <!-- headingDivider: 1 -->
 
  
-# Todoアプリハンズオン <marquee behaivor="slide" scrolldelay="10">by Flutter</marquee>
+# Todoアプリハンズオン 
+## by Flutter
+
+pregum
  
 # 目次
 
 * Flutterとは？
-* ネイティブアプリとの違い
+* Flutterとネイティブアプリとの違い
+* なぜ他のXPではなくFlutterなのか？:thinking:
 * 今日作るアプリについて
-* 早速アプリを作る
+* TodoApp作成
+* (時間があれば)、質疑応答
 
-# Flutterとは？(2min)
+# Flutterとは？
 
 * Googleが開発中のクロスプラットフォーム(以降XP)開発が可能なフレームワークです。
-* 今現在(2022/8/7)では、iOS/Android/Web/Linux/macOS/Windowが開発可能です。
+* 今現在(2022/8/22)、iOS/Android/Web/Linux/macOS/Windowが開発可能です。
+
+
+---
+## Flutterとネイティブアプリとの違い 
+
+開発スピードと処理速度
+
+項目|Flutter|ネイティブアプリ
+:---:|:---:|:---:
+パフォーマンス | 若干遅い | 早い
+開発速度 | 概ね１Platform分 | OS数に応じて遅くなる
+検討されるケース | 開発コスト削減 | nativeの機能が必要 
 
 
 ---
@@ -95,18 +112,6 @@ https://dartpad.dev/7942cc454f0937046632c7c61ea3e773
 
 軽く挙動を見たい時に使うのが良さそう
 
----
-## ネイティブアプリとの違い 
-
-開発スピードと処理速度
-
-ネイティブアプリ
-✅  処理速度が速い
-:x: 各プラットフォームごとにコードを書く必要がある
-
-Flutter
-✅  1つのソースで複数のプラットフォームで実行可能
-:x: ネイティブアプリに比べると処理速度が若干遅い
 
 ---
 <style scoped>
@@ -331,35 +336,29 @@ Text, ListView, Slider, Container, etc...
 2. サンプルアプリ(カウンターアプリ)動作確認
 3. 1つのタスクのUI作成
 4. リスト形式に並べるUIを作成
-5. ウィジェット切り出し
-6. ローカルDB(Hive)のライブラリを追加
+5. main.dartへの配置
 
 ---
 ## プロジェクト作成
 
-下記URLからGit Cloneをお願いします。
+VS Codeで新規プロジェクトを作成します。
 
-https://github.com/Pregum/todo-app-hands-on-flutter
-
-ssh
-`git@github.com:Pregum/todo-app-hands-on-flutter.git`
+プロジェクト名は何でも大丈夫です。
+特になければ  `hands_on_todo_app`でお願いします。
 
 ---
 
-<style scoped>
-  img .bottom {
-
-  }
-</style>
 ## サンプル(カウンターアプリ)動作確認
 
-CloneしたプロジェクトをAndroid エミュレータで動かしてみます。
+作成したプロジェクトをAndroid エミュレータで動かしてみます。
 
 ここではVS Codeを使用します。
 
 `main.dart`をVSCode上で選択後、起動先エミュレータを設定します。
 
 ![](images/image_1_1.png)
+
+その後、F5で無事起動すればOK
 
 ---
 
