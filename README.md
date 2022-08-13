@@ -14,11 +14,20 @@
 
 * Web
 
-<https://user-images.githubusercontent.com/19755685/180635648-6903cac3-4846-4632-a37c-ac7ed01ad312.mov>
+
+
+
+https://user-images.githubusercontent.com/19755685/184498864-797905a1-c08a-4db3-bc73-550d5d0f5e40.mov
+
+
+
 
 * Android
 
-<https://user-images.githubusercontent.com/19755685/180637409-e9405421-bfff-496d-9b89-53f1c0cb8fbf.mov>
+
+https://user-images.githubusercontent.com/19755685/184498846-b8e799cb-61a0-4329-9942-812df42d0c31.mov
+
+
 
 ## 起動方法
 
