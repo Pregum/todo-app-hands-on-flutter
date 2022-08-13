@@ -43,10 +43,14 @@ pregum
 
 Flutterのバージョン: 3.0.5
 
+Flutterのバージョンは`flutter doctor -v`で確認できます。
+
 Flutterのバージョンをいじりたくない場合は
 `fvm`を入れてバージョンを固定しましょう.
 
 `brew install fvm` コマンド実行後、今回の作業フォルダで`fvm local 3.0.5 -f`を実行すればOK
+
+参考サイト: https://zenn.dev/riscait/articles/flutter-version-management
 
 # Flutterとは？
 
