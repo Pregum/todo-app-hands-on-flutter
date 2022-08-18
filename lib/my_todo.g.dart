@@ -1,33 +1,33 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'todo.dart';
+part of 'my_todo.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class TodoAdapter extends TypeAdapter<Todo> {
+class TodoAdapter extends TypeAdapter<MyTodo> {
   @override
   final int typeId = 1;
 
   @override
-  Todo read(BinaryReader reader) {
+  MyTodo read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Todo(
+    return MyTodo(
       id: fields[1] as String,
       taskName: fields[2] as String,
       isCompleted: fields[3] as bool,
-      isEditEnabled: fields[4] as bool,
-    );
+      createdAt: fields[4] as DateTime?,
+    )..updatedAt = fields[5] as DateTime;
   }
 
   @override
-  void write(BinaryWriter writer, Todo obj) {
+  void write(BinaryWriter writer, MyTodo obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(1)
       ..write(obj.id)
       ..writeByte(2)
@@ -35,7 +35,9 @@ class TodoAdapter extends TypeAdapter<Todo> {
       ..writeByte(3)
       ..write(obj.isCompleted)
       ..writeByte(4)
-      ..write(obj.isEditEnabled);
+      ..write(obj.createdAt)
+      ..writeByte(5)
+      ..write(obj.updatedAt);
   }
 
   @override

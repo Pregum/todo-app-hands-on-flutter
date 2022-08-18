@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:todo_app/todo.dart';
-import 'package:todo_app/todo_manager.dart';
+import 'package:todo_app/my_todo.dart';
+import 'package:todo_app/my_todo_manager.dart';
 
-import 'todo_screen.dart';
+import 'todo_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +54,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final sc = StreamController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,10 +62,10 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: const TodoScreen(),
+      body: const TodoPage(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _createNewContent();
+        onPressed: () async {
+          await _createNewContent();
         },
         tooltip: '新しいタスク',
         child: const Icon(Icons.add),
@@ -71,13 +74,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _createNewContent() async {
-    await TodoManager.getInstance().createNewTodo(onFailed: () {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('現在編集中のTodoを確定してから新規追加してください。'),
-          duration: Duration(milliseconds: 1500),
-        ),
-      );
-    });
+    await MyTodoManager.instance.createNewTodo();
   }
 }
