@@ -52,6 +52,19 @@ Flutterのバージョンをいじりたくない場合は
 
 参考サイト: https://zenn.dev/riscait/articles/flutter-version-management
 
+---
+### 自己紹介
+
+1995年生まれ
+
+普段はKotlin, Swift, TypeScript で開発しています
+
+Flutterで個人アプリを
+作っています
+
+
+![bg right 70%](images/icon.png)
+
 # Flutterとは？
 
 * Googleが開発中のクロスプラットフォーム(以降XP)開発が可能なフレームワークです。
