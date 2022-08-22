@@ -774,6 +774,15 @@ Widget build(BuildContext context) {
 
 ## :confetti_ball: お疲れ様でした :confetti_ball: 
 
+
+---
+## 改善ヒント
+
+* 更新時、特定のtodoタスクのみ更新させる
+* 状態管理ライブラリを使用してコード量を減らす
+* 完了todoタスクを非表示にする機能の追加
+* todoタスクの順番を入れ替える機能の追加
+
 ---
 ## 参考サイト
 
