@@ -52,6 +52,19 @@ Flutterのバージョンをいじりたくない場合は
 
 参考サイト: https://zenn.dev/riscait/articles/flutter-version-management
 
+---
+### 自己紹介
+
+1995年生まれ
+
+普段はKotlin, Swift, TypeScript で開発しています
+
+Flutterで個人アプリを
+作っています
+
+
+![bg right 70%](images/icon.png)
+
 # Flutterとは？
 
 * Googleが開発中のクロスプラットフォーム(以降XP)開発が可能なフレームワークです。
@@ -519,7 +532,7 @@ Widget build(BuildContext context) {
     child: CheckboxListTile(
       value: widget.todo.isCompleted, // check用の変数を設定
       onChanged: (bool? newValue) { }, // チェックのON/OFF時のコールバックを設定 
-      title: Text( widget.doto.taskName ), // タスク名を設定
+      title: Text( widget.todo.taskName ), // タスク名を設定
       subtitle: Text('更新日: ${ widget.todo.updatedAt }'), // 更新日を設定
     )
   );
@@ -718,7 +731,7 @@ Widget build(BuildContext context) {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  Hive.registerAdapter(TodoAdapter());
+  Hive.registerAdapter(MyTodoAdapter());
 
   runApp(const MyApp());
 }
