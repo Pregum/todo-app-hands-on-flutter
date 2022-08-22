@@ -532,7 +532,7 @@ Widget build(BuildContext context) {
     child: CheckboxListTile(
       value: widget.todo.isCompleted, // check用の変数を設定
       onChanged: (bool? newValue) { }, // チェックのON/OFF時のコールバックを設定 
-      title: Text( widget.doto.taskName ), // タスク名を設定
+      title: Text( widget.todo.taskName ), // タスク名を設定
       subtitle: Text('更新日: ${ widget.todo.updatedAt }'), // 更新日を設定
     )
   );
@@ -731,7 +731,7 @@ Widget build(BuildContext context) {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  Hive.registerAdapter(TodoAdapter());
+  Hive.registerAdapter(MyTodoAdapter());
 
   runApp(const MyApp());
 }
