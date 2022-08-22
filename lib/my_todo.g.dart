@@ -6,7 +6,7 @@ part of 'my_todo.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class TodoAdapter extends TypeAdapter<MyTodo> {
+class MyTodoAdapter extends TypeAdapter<MyTodo> {
   @override
   final int typeId = 1;
 
@@ -46,7 +46,7 @@ class TodoAdapter extends TypeAdapter<MyTodo> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TodoAdapter &&
+      other is MyTodoAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
