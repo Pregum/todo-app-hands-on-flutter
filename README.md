@@ -10,6 +10,10 @@
 * タスクDB保存機能
 * タスク完了チェック機能
 
+## 資料
+
+https://www.docswell.com/s/Pregum/ZJV71Z-2022-08-14-012322
+
 ## 動画
 
 * Web
